@@ -2,11 +2,16 @@
 class Cartes
 {
  public:
+  enum Couleur
+    {
+      ROUGE,
+      NOIR
+    };
   enum Sorte
     {
       COEUR,
-      CARREAU,
       PIQUE,
+      CARREAU,
       TREFLE
     };
   enum Valeur
@@ -35,11 +40,19 @@ class Cartes
   bool		operator==(const Cartes &) const;
   // Renvoie true si la carte courante est la carte suivante de celle passee en parametre (dix < valet)
   bool		operator<(const Cartes &) const;
+  // Renvoie true si la carte courante est la carte precedente de celle passee en parametre (dix < valet)
+  bool		operator>(const Cartes &) const;
+
+  bool		operator>=(const Cartes &) const;
+  bool		operator<=(const Cartes &) const;
 
  private:
+  Couleur	couleur() const;
+
   Sorte		m_sorte;
   Valeur	m_valeur;
 
   // Affiche une carte sous la forme Valeur'Sorte (10'CO)
-  friend std::ostream	operator<<(std::ostream &, const Cartes &);
+  friend std::ostream	&operator<<(std::ostream &, const Cartes &);
 };
+
