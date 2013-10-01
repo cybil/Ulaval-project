@@ -82,6 +82,16 @@ bool		Cartes::operator<=(const Cartes &p_carte) const
   return false;
 }
 
+
+//***********
+// Accesseur
+//***********
+
+bool		isAs() const
+{
+  return m_valeur == Cartes::AS ? true : false;
+}
+
 //*********
 // Private
 //*********
