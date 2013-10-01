@@ -108,7 +108,9 @@ namespace Pile_Lab4
     
     m_sommet = tmp->m_suivant;
     m_cpt--;
-    return (tmp->m_el);
+    T tmp_el = tmp->m_el;
+    delete (tmp);
+    return (tmp_el);
   }
   
   //***********
