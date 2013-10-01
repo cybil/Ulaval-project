@@ -13,11 +13,6 @@ ColonneCarte::ColonneCarte()
   m_nbCartesVisibles = 1;  
 }
 
-ColonneCarte::ColonneCarte(const ColonneCarte &p_rhs)
-{
-
-}
-
 ColonneCarte::~ColonneCarte()
 {
 }
@@ -27,23 +22,28 @@ void		ColonneCarte::initColonneCarte(Liste<Cartes> &p_listeCartes)
   m_lesCartes = p_listeCartes;
 }
 
-void		ColonneCarte::ajoute(const Carte &p_carte)
+void		ColonneCarte::ajoute(const Cartes &p_carte)
 {
-  if (p_carte <= m_lesCartes.last()) // voir Liste
+  if (p_carte <= m_lesCartes.element(m_lesCartes.taille()))
     {
-      m_lesCartes.ajouter(p_carte);
+      m_lesCartes.ajouter(p_carte, m_lesCartes.taille() + 1);
       ++m_nbCartesVisibles;
     }
+  throw std::runtime_error("runtime_error");
 }
 
 void		ColonneCarte::deplacePaquet(ColonneCarte &p_destination, int p_nombreCartes)
 {
-  
+  for (int i = (m_lesCartes.taille() - p_nombreCartes); i < m_lesCartes.taille(); i++)
+    {
+      p_destination.ajoute(m_lesCartes.element(i));
+      supprimerDerniereCarte();
+    }
 }
 
 void		ColonneCarte::supprimerDerniereCarte()
 {
-  m_lesCartes.enlever();
+  m_lesCartes.enleverPos(m_lesCartes.taille());
   --m_nbCartesVisibles;
 }
 
@@ -61,12 +61,17 @@ int		ColonneCarte::getTailleListe() const
   return m_lesCartes.taille();
 }
 
+const Cartes	&ColonneCarte::getCarteAPosition(int p_pos) const
+{
+  return m_lesCartes.element(p_pos);
+}
 
 std::ostream	&operator<<(std::ostream &p_f, const ColonneCarte &p_colonne)
 {
-  for (int i = 0; i < (p_colonne.getTailleListe() - p_colonne.getNbCartesVisibles()); i++)
-    p_f << *;
-  p_f << p_colonne.m_lesCartes;
+  for (int i = 0; i < p_colonne.getTailleListe() - p_colonne.getNbCartesVisibles(); i++)
+    p_f << " ? ";
+  for (int i = (p_colonne.getTailleListe() - p_colonne.getNbCartesVisibles()); i < p_colonne.getTailleListe(); i++)
+    p_f << p_colonne.getCarteAPosition(i + 1);
   return p_f;
 }
 

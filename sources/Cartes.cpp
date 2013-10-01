@@ -8,6 +8,12 @@
 //*****************************
 
 //! \brief Constructeur par defaut
+//! \post Une instance de la classe Cartes est cree
+Cartes::Cartes()
+{
+}
+
+//! \brief Constructeur avec initialisation des attributs
 //! \post Une instance de la classe Cartes est initialisee
 Cartes::Cartes(const Cartes::Valeur p_valeur, const Cartes::Sorte p_sorte)
 {
@@ -87,7 +93,7 @@ bool		Cartes::operator<=(const Cartes &p_carte) const
 // Accesseur
 //***********
 
-bool		isAs() const
+bool		Cartes::isAs() const
 {
   return m_valeur == Cartes::AS ? true : false;
 }
@@ -122,12 +128,12 @@ std::ostream	&operator<<(std::ostream &p_f, const Cartes &p_carte)
     };
   if (p_carte.m_valeur == Cartes::VALET)
     p_f << "V'";
-  if (p_carte.m_valeur == Cartes::DAME)
+  else if (p_carte.m_valeur == Cartes::DAME)
     p_f << "D'";
-  if (p_carte.m_valeur == Cartes::ROI)
+  else if (p_carte.m_valeur == Cartes::ROI)
     p_f << "R'";
   else
-    p_f << p_carte.m_valeur << "'";
-  p_f << tab[p_carte.m_sorte] << std::endl;
+      p_f << p_carte.m_valeur << "'";
+  p_f << tab[p_carte.m_sorte];
   return p_f;
 }
