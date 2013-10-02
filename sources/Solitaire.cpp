@@ -43,6 +43,9 @@ Solitaire::Solitaire() : m_talon(24)
        m_colonnes[j].initColonneCarte(newListe);
        nbCartesParColonne++;
      }
+   while (k < tabTmp.size())
+     m_talon.enfiler(tabTmp[k++]);
+   
 }
 
 //! \brief Destructeur par defaut
@@ -61,7 +64,7 @@ Solitaire::~Solitaire()
 //! \post La premiere carte est placee a la fin du talon
 void			Solitaire::avancerTalon()
 {
-  
+  m_talon.enfiler(m_talon.defiler());
 }
 
 //! \brief Deplace un nombre de carte d'une colonne a une autre
@@ -74,7 +77,7 @@ void			Solitaire::deplacerColonneAColonne(int p_colonneSource,
 							   int p_colonneDestination,
 							   int p_nbCartes)
 {
-
+  m_colonnes[p_colonneSource].deplacePaquet(m_colonnes[p_colonneDestination], p_nbCartes);
 }
 
 
@@ -84,7 +87,9 @@ void			Solitaire::deplacerColonneAColonne(int p_colonneSource,
 //! \exception runtime_error si le deplacement demande par l'appel n'est pas reglementaire
 void			Solitaire::deplacerTalonAColonne(int p_colonneDestination)
 {
-
+  if (p_colonneDestination < 0 || p_colonneDestination > 6)
+    throw std::runtime_error("runtime_error");
+  m_colonnes[p_colonneDestination].ajoute(m_talon.defiler());
 }
 
 
@@ -94,15 +99,14 @@ void			Solitaire::deplacerTalonAColonne(int p_colonneDestination)
 //! \exception runtime_error si le deplacement demande par l'appel n'est pas reglementaire
 void			Solitaire::deplacerTalonAPile(int p_pileDestination)
 {
-  if (p_pileDestination < 0 || p_pileDestination > 6)
+  if (p_pileDestination < 0 || p_pileDestination > 3)
     throw std::runtime_error("!! Coup inalide !!");
+
   if (m_piles[p_pileDestination].estVide() == true && m_talon.premier().isAs() == false)
     throw std::runtime_error("!! Coup invalide !!");
-  else if (m_piles[p_pileDestination].estVide() == true)
-    m_piles[p_pileDestination].empiler(m_talon.premier());
-
-  if (m_talon.premier() >= m_piles[p_pileDestination].top())
-    m_piles[p_pileDestination].empiler(m_talon.premier());
+  else if (m_piles[p_pileDestination].estVide() == true
+	   || m_talon.premier() >= m_piles[p_pileDestination].top())
+    m_piles[p_pileDestination].empiler(m_talon.defiler());
   else
     throw std::runtime_error("!! Coup invalide !!");
 }
@@ -119,7 +123,18 @@ void			Solitaire::deplacerColonneAPile(int p_colonneSource, int p_pileDestinatio
   if (p_pileDestination < 0 || p_pileDestination > 4 
       || p_colonneSource < 0 || p_colonneSource > 6)
     throw std::runtime_error("!! Coup inalide !!");
-  // m_colonnes[p_colonneSource].deplacePaquet()
+
+  if (m_piles[p_pileDestination].estVide() == true
+      && m_colonnes[p_colonneSource].getCarteAPosition(m_colonnes[p_colonneSource].getTailleListe()).isAs() == false)
+    throw std::runtime_error("!! Coup invalide !!");
+  else if (m_piles[p_pileDestination].estVide() == true
+	   || m_colonnes[p_colonneSource].getCarteAPosition(m_colonnes[p_colonneSource].getTailleListe()) >= m_piles[p_pileDestination].top())
+    {
+      m_piles[p_pileDestination].empiler(m_colonnes[p_colonneSource].getCarteAPosition(m_colonnes[p_colonneSource].getTailleListe()));
+      m_colonnes[p_colonneSource].supprimerDerniereCarte();
+    }
+  else
+    throw std::runtime_error("!! Coup invalide !!");
 }
 
 
@@ -144,7 +159,7 @@ std::string		Solitaire::reqEtatJeu() const
 
   oss << "Talon: " << m_talon[0] << "\t\tPiles ";
   for (int i = 0; i < 4; i++)
-    oss << "   " << m_piles[i];
+    (m_piles[i].taille() == 0 ? oss << "   X" : oss << "   " << m_piles[i]);
   oss << std::endl << std::endl;
   for (int i = 0; i < 7; i++) 
     oss << "Col." << i << ": " << m_colonnes[i] << std::endl;

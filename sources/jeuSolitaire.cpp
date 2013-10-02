@@ -11,30 +11,56 @@ struct t_opt
 void		prochaineTalon(Solitaire &p_jeu)
 {
   std::cout << "prochaineTalon" << std::endl;
+  p_jeu.avancerTalon();
 }
 
 void		deplacerTalonColonne(Solitaire &p_jeu)
 {
-  std::cout << "deplacerTalonColonne" << std::endl;
+  int		numColonneDestination;
 
+  std::cout << "deplacerTalonColonne" << std::endl;
+  std::cout << "Entrer le numero de la colonne de destination [0,6] : ";
+  std::cin >> numColonneDestination;
+  p_jeu.deplacerTalonAColonne(numColonneDestination);
 }
 
 void		deplacerTalonPile(Solitaire &p_jeu)
 {
+  int		numPileDestination;
+  
   std::cout << "deplacerTalonPile" << std::endl;
-
+  std::cout << "Entrer le numero de la pile de destination [0,3] : ";
+  std::cin >> numPileDestination;
+  p_jeu.deplacerTalonAPile(numPileDestination);
 }
 
 void		deplacerColonneColonne(Solitaire &p_jeu)
 {
   std::cout << "deplacerColonneColonne" << std::endl;
+  int		numColonneOrigine;
+  int		numColonneDestination;
+  int		nbCartes;
 
+  std::cout << "Entrer le numero de la colonne d'origine [0,6] : ";
+  std::cin >> numColonneOrigine;
+  std::cout << "Entrer le numero de la colonne de destination [0,6] : ";
+  std::cin >> numColonneDestination;
+  std::cout << "Entrer le nombre de carte a deplacer [1,12] : ";
+  std::cin >> nbCartes;
+  p_jeu.deplacerColonneAColonne(numColonneOrigine, numColonneDestination, nbCartes);
 }
 
 void		deplacerColonnePile(Solitaire &p_jeu)
 {
-  std::cout << "deplacerColonnePile" << std::endl;
+  int		numColonneOrigine;
+  int		numPileDestination;
 
+  std::cout << "deplacerColonnePile" << std::endl;
+  std::cout << "Entrer le numero de la colonne d'origine [0,6] : ";
+  std::cin >> numColonneOrigine;
+  std::cout << "Entrer le numero de la pile de destination [0,3] : ";
+  std::cin >> numPileDestination;
+  p_jeu.deplacerColonneAPile(numColonneOrigine, numPileDestination);
 }
 
 static t_opt	tab[] =

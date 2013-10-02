@@ -91,7 +91,7 @@ template<typename T>
 void		Liste<T>::ajouter(const T &p_elem, int p_pos)
 {
   if (p_pos < 1 || p_pos > taille() + 1)
-    throw std::range_error("range_error");
+    throw std::range_error("range_error LISTE ajouter");
 
   Liste<T>::Noeud	*nouveauNoeud = new Liste<T>::Noeud(p_elem, NULL, NULL);
 
@@ -173,8 +173,9 @@ template<typename T>
 void		Liste<T>::enleverPos(int p_pos)
 {
   if (p_pos < 1 || p_pos > taille())
-    throw std::range_error("range_error");
+    throw std::range_error("range_error LISTE enleverPos");
   enleverEl(element(p_pos));
+  std::cout << "LISTE ::: " << *this << std::endl;
 }
 
 
@@ -242,7 +243,7 @@ const T		&Liste<T>::element(int p_pos) const
       i++;
       tmp = tmp->m_suivant;
     }
-  throw std::range_error("range_error");
+  throw std::range_error("range_error LISTE elem");
 }
 
 //! \brief Retourne la position d'un element

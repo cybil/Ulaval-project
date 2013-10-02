@@ -28,23 +28,30 @@ void		ColonneCarte::ajoute(const Cartes &p_carte)
     {
       m_lesCartes.ajouter(p_carte, m_lesCartes.taille() + 1);
       ++m_nbCartesVisibles;
+      return ;
     }
-  throw std::runtime_error("runtime_error");
+  throw std::runtime_error("runtime_error AJOUTER");
 }
 
 void		ColonneCarte::deplacePaquet(ColonneCarte &p_destination, int p_nombreCartes)
 {
-  for (int i = (m_lesCartes.taille() - p_nombreCartes); i < m_lesCartes.taille(); i++)
+  Liste<Cartes>	tmp;
+
+  int	i = m_lesCartes.taille();
+  int	j = (m_lesCartes.taille() - p_nombreCartes);
+  while (i > j)
     {
-      p_destination.ajoute(m_lesCartes.element(i));
+      tmp.ajouter(m_lesCartes.element(i), tmp.taille() + 1);
       supprimerDerniereCarte();
+      --i;
     }
+  for (int i = tmp.taille(); i > 0; i--)
+    p_destination.ajoute(tmp.element(i));
 }
 
 void		ColonneCarte::supprimerDerniereCarte()
 {
   m_lesCartes.enleverPos(m_lesCartes.taille());
-  --m_nbCartesVisibles;
 }
 
 //************
