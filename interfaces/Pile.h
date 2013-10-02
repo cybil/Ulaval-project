@@ -99,7 +99,7 @@ class Pile
    * \post La pile est inchangée  
    * \exception logic_error si la pile est vide
    */
-  const T& top()  throw (std::logic_error);	// élément au sommet
+  const T& top()  const throw (std::logic_error);	// élément au sommet
 
   //surcharge d'opérateurs
 

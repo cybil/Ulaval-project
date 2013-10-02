@@ -53,7 +53,7 @@ const Cartes	&Cartes::operator=(const Cartes &p_rhs)
 //! \return TRUE si les deux cartes ont la meme sorte sinon FALSE
 bool		Cartes::operator==(const Cartes &p_carte) const
 {
-  return m_sorte == p_carte.m_sorte ? true : false;
+  return (m_sorte == p_carte.m_sorte && m_valeur == p_carte.m_valeur) ? true : false;
 }
 
 //! \brief Surcharge l'operateur <
@@ -74,7 +74,7 @@ bool		Cartes::operator>(const Cartes &p_carte) const
 //! \return TRUE si la carte courante peut etre superposee a celle en parametre dans les Piles
 bool		Cartes::operator>=(const Cartes &p_carte) const
 {
-  if (*this == p_carte && *this > p_carte)
+  if (m_sorte == p_carte.m_sorte && *this > p_carte)
     return true;
   return false;
 }
@@ -96,6 +96,11 @@ bool		Cartes::operator<=(const Cartes &p_carte) const
 bool		Cartes::isAs() const
 {
   return m_valeur == Cartes::AS ? true : false;
+}
+
+bool		Cartes::isRoi() const
+{
+  return m_valeur == Cartes::ROI ? true : false;
 }
 
 //*********
@@ -137,3 +142,4 @@ std::ostream	&operator<<(std::ostream &p_f, const Cartes &p_carte)
   p_f << tab[p_carte.m_sorte];
   return p_f;
 }
+

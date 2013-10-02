@@ -133,7 +133,7 @@ bool File<T>::estPleine() const
  * \return Une copie de T, l'élément en tête de file
  */
 template<typename T>
-const T& File<T>::premier() throw (std::logic_error)
+const T& File<T>::premier() const throw (std::logic_error)
 {
   if (cpt == 0)
     {

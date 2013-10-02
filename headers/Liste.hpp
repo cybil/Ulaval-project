@@ -175,7 +175,6 @@ void		Liste<T>::enleverPos(int p_pos)
   if (p_pos < 1 || p_pos > taille())
     throw std::range_error("range_error LISTE enleverPos");
   enleverEl(element(p_pos));
-  std::cout << "LISTE ::: " << *this << std::endl;
 }
 
 
@@ -236,6 +235,7 @@ const T		&Liste<T>::element(int p_pos) const
   Liste<T>::Noeud	*tmp = m_sommetG;
   int			i = 1;
 
+  std::cout << "P_POS = " << p_pos << std::endl;
   while (tmp)
     {
       if (i == p_pos)
@@ -283,7 +283,7 @@ template<class U>
 std::ostream& operator <<(std::ostream &p_f, const Liste<U> &p_l)
 {
   for (int i = 1; i <= p_l.taille(); i++)
-    p_f << p_l.element(i);
+    p_f << " " << p_l.element(i);
   return p_f;
 }
 

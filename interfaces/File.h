@@ -109,7 +109,7 @@ public:
    * \post La file est inchangée  
    * \exception logic_error si la file est vide
    */
-  const T& premier()  throw (std::logic_error);	
+  const T& premier()  const throw (std::logic_error);	
 
   /**                       
    * \brief Retourner l'élément au queue de la file

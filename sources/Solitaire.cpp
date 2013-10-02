@@ -157,9 +157,9 @@ std::string		Solitaire::reqEtatJeu() const
   std::ostringstream	oss;
   std::string		etatJeu;
 
-  oss << "Talon: " << m_talon[0] << "\t\tPiles ";
+  oss << "Talon: " << m_talon.premier() << "\t\tPiles ";
   for (int i = 0; i < 4; i++)
-    (m_piles[i].taille() == 0 ? oss << "   X" : oss << "   " << m_piles[i]);
+    (m_piles[i].taille() == 0 ? oss << "   X" : oss << "   " << m_piles[i].top());
   oss << std::endl << std::endl;
   for (int i = 0; i < 7; i++) 
     oss << "Col." << i << ": " << m_colonnes[i] << std::endl;

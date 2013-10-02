@@ -38,7 +38,7 @@ class Cartes
   ~Cartes();
 
   const Cartes	&operator=(const Cartes &);
-  // Renvoie true si les deux cartes ont la meme couleur
+  // Renvoie true si les deux cartes sont identiques
   bool		operator==(const Cartes &) const;
   // Renvoie true si la carte courante est la carte suivante de celle passee en parametre (dix < valet)
   bool		operator<(const Cartes &) const;
@@ -48,6 +48,7 @@ class Cartes
   bool		operator>=(const Cartes &) const;
   bool		operator<=(const Cartes &) const;
   bool		isAs() const;
+  bool		isRoi() const;
 
  private:
   Couleur	couleur() const;

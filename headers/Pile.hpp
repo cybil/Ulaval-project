@@ -150,7 +150,7 @@ int Pile<T>::taille() const
  * \exception logic_error si la pile est vide
  */
 template<typename T>
-const T& Pile<T>::top() throw (std::logic_error)
+const T& Pile<T>::top() const throw (std::logic_error)
 {
   if (m_cpt == 0)
     throw std::logic_error("Liste vide");
