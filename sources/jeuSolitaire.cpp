@@ -74,9 +74,9 @@ static t_opt	tab[] =
 
 void		affMenu()
 {
-  std::cout << "******************************************************" << std::endl;
-  std::cout << "\tMenu" << std::endl;
-  std::cout << "******************************************************" << std::endl;
+  std::cout << "******************************************" << std::endl;
+  std::cout << "      Menu" << std::endl;
+  std::cout << "******************************************" << std::endl;
   std::cout << "1. Prochaine carte du talon." << std::endl;
   std::cout << "2. Deplacer une carte du talon vers une colonne." << std::endl;
   std::cout << "3. Deplacer une carte du talon vers une pile." << std::endl;
@@ -106,7 +106,7 @@ int		main(int ac, char **av)
 	    (tab[i].ptr)(jeu);
       }
       catch (std::exception e) {
-	std::cerr << "\t!! Coup invalide !!" << std::endl;
+	std::cerr << "!!! Coup invalide !!!" << std::endl;
       }
       if (jeu.verifieGagne() == true)
 	{

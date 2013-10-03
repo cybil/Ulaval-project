@@ -49,7 +49,7 @@ void		ColonneCarte::ajoute(const Carte &p_carte)
       ++m_nbCartesVisibles;
       return ;
     }
-  throw std::runtime_error("runtime_error AJOUTER");
+  throw std::runtime_error("runtime_error");
 }
 
 //! \brief Deplace un paquet de carte de la colonne courante a une autre

@@ -184,7 +184,7 @@ template<typename T>
 const File<T>& File<T>::operator =(const File<T>& f) throw (std::bad_alloc)
 {
   if (tab != 0)
-    delete[] tab; //nettoyer ...
+    delete[] tab; //nettoyer .../
   tab = new T[f.tailleMax];
   for (int i = 0; i < f.cpt; i++)
     tab[i] = f.tab[i];
