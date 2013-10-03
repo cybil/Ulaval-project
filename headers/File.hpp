@@ -1,13 +1,9 @@
-/**
- * \file FileTableau.inl
- * \brief Le code des opérateurs de la file.
- * \author Abder revise Thierry
- * \version 1.0
- * \brief correction operator[], ecritures non standard vs->g++, return(s) mal places
- * \date octobre 2012
- *
- * Implémentation de la classe générique File dans un tableau dynamique
- */
+//! \file File.hpp
+//! \brief Le code des opérateurs de la liste.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 0.1
+//! \date 29 septembre 2013
+//! Implémentation de la classe générique File
 
 /**
  * \fn File<T>::File(int max) throw(std::bad_alloc)
