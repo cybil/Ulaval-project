@@ -1,3 +1,11 @@
+//! \file colonneTesteur.cpp
+//! \brief Google Test Cartes.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 1.0
+//! \date 02 octobre 2013
+//!
+//! Google Test COlonne
+
 #include <iostream>
 #include "gtest/gtest.h"
 #include "Colonne.h"

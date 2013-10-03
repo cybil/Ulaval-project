@@ -1,3 +1,11 @@
+//! \file solitaireTesteur.cpp
+//! \brief Google Test Solitaire.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 1.0
+//! \date 02 octobre 2013
+//!
+//! Google Test Solitaire
+
 #include <iostream>
 #include "gtest/gtest.h"
 #include "Solitaire.h"

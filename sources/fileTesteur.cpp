@@ -1,8 +1,15 @@
+//! \file fileTesteur.cpp
+//! \brief Google Test File.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 1.0
+//! \date 02 octobre 2013
+//!
+//! Google Test file
 
 #include <iostream>
 #include "gtest/gtest.h"
 #include "File.h"
-#include "Cartes.h"
+#include "Carte.h"
 
 TEST(testEnfiler, estEnfile)
 {

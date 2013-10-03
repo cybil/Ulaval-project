@@ -1,3 +1,11 @@
+//! \file pileTesteur.cpp
+//! \brief Google Test Pile.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 1.0
+//! \date 02 octobre 2013
+//!
+//! Google Test Pile
+
 #include <iostream>
 #include "gtest/gtest.h"
 #include "Pile.h"
