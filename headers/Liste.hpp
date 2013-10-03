@@ -235,7 +235,6 @@ const T		&Liste<T>::element(int p_pos) const
   Liste<T>::Noeud	*tmp = m_sommetG;
   int			i = 1;
 
-  std::cout << "P_POS = " << p_pos << std::endl;
   while (tmp)
     {
       if (i == p_pos)

@@ -88,7 +88,6 @@ void		affMenu()
 
 int		main(int ac, char **av)
 {
-  std::cout << "Coucou, je suis un jeu de solitaire. Tu es seul ? viens jouer avec moi :p" << std::endl;
   Solitaire	jeu;
   bool		run = true;
 
@@ -101,9 +100,19 @@ int		main(int ac, char **av)
       std::cin >> buf;
       if (buf == "6")
 	run = false;
-      for (int i = 0; i < 5; i++)
-	if (buf == tab[i].opt)
-	  (tab[i].ptr)(jeu);
+      try {
+	for (int i = 0; i < 5; i++)
+	  if (buf == tab[i].opt)
+	    (tab[i].ptr)(jeu);
+      }
+      catch (std::exception e) {
+	std::cerr << "\t!! Coup invalide !!" << std::endl;
+      }
+      if (jeu.verifieGagne() == true)
+	{
+	  run = false;
+	  std::cout << "Vous avez gagne !" << std::endl;
+	}
     }
   return 0;
 }

@@ -3,10 +3,10 @@
 #include "Cartes.h"
 
 
-TEST(testSorte, estMemeSorte)
+TEST(testSorte, estMemeCarte)
 {
   Cartes	c1(Cartes::AS, Cartes::COEUR);
-  Cartes	c2(Cartes::ROI, Cartes::COEUR);
+  Cartes	c2(Cartes::AS, Cartes::COEUR);
   Cartes	c3(Cartes::TROIS, Cartes::PIQUE);
 
   EXPECT_TRUE(c1 == c2);

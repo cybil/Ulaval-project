@@ -77,6 +77,8 @@ void			Solitaire::deplacerColonneAColonne(int p_colonneSource,
 							   int p_colonneDestination,
 							   int p_nbCartes)
 {
+  if (p_nbCartes > m_colonnes[p_colonneSource].getNbCartesVisibles())
+    throw std::runtime_error("runtime_error");
   m_colonnes[p_colonneSource].deplacePaquet(m_colonnes[p_colonneDestination], p_nbCartes);
 }
 
@@ -146,7 +148,12 @@ void			Solitaire::deplacerColonneAPile(int p_colonneSource, int p_pileDestinatio
 //! \return TRUE si le joueur a gagne la partie sinon FALSE
 bool			Solitaire::verifieGagne() const
 {
-
+  if (m_talon.estVide() == false)
+    return false;
+  for (int i = 0; i < 7; i++)
+    if (m_colonnes[i].getTailleListe() != 0)
+      return false;
+  return true;
 }
 
 

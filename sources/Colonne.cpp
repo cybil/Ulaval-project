@@ -43,20 +43,16 @@ void		ColonneCarte::deplacePaquet(ColonneCarte &p_destination, int p_nombreCarte
       tmp.ajouter(m_lesCartes.element(m_lesCartes.taille()), tmp.taille() + 1);
       supprimerDerniereCarte();
     }
-  std::cout << "LISTE TMP TAILLE::: " << tmp.taille();
-  std::cout << "LISTE TMP ::: " << tmp << std::endl;
   for (int i = tmp.taille(); i >= 1; i--)
-    {
-      p_destination.ajoute(tmp.element(i));
-    }
-  std::cout << "COUCOU -------" << std::endl;
+    p_destination.ajoute(tmp.element(i));
 }
 
 void		ColonneCarte::supprimerDerniereCarte()
 {
   m_lesCartes.enleverPos(m_lesCartes.taille());
-  if (m_nbCartesVisibles > 1)
-    --m_nbCartesVisibles;
+  --m_nbCartesVisibles;
+  if (m_nbCartesVisibles == 0 && m_lesCartes.taille() > 0)
+    m_nbCartesVisibles = 1;
 }
 
 //************
@@ -80,17 +76,13 @@ const Cartes	&ColonneCarte::getCarteAPosition(int p_pos) const
 
 std::ostream	&operator<<(std::ostream &p_f, const ColonneCarte &p_colonne)
 {
-  std::cout << "Here ???" << std::endl;
   if (p_colonne.getTailleListe() == 0)
     return p_f;
   for (int i = 0; i < p_colonne.getTailleListe() - p_colonne.getNbCartesVisibles(); i++)
     p_f << " ?";
   for (int i = (p_colonne.getTailleListe() - p_colonne.getNbCartesVisibles());
        i < p_colonne.getTailleListe(); i++)
-    {
-      p_f << " ";
-      p_f << p_colonne.getCarteAPosition(i + 1);
-    }
+    p_f << " " << p_colonne.getCarteAPosition(i + 1);
   return p_f;
 }
 
