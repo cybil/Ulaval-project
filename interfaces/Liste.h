@@ -1,11 +1,11 @@
 /**
  * \file Liste.h
- * \brief Classe Définissant le type abstrait liste
- * \author Mathieu Dumoulin (m.a.j. par Cybil Bourely - CMBOU5)
- * \version 0.2
- * \date 21 septembre 2013
+ * \brief Classe définissant le type Liste
+ * \author Cybil Bourely - CMBOU5
+ * \version 0.1
+ * \date 02 octobre 2013
  *
- * Implémentation dans une liste doublement chaînée
+ * Représentation de la classe Liste 
  */
 
 #ifndef _LISTE__H

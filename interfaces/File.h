@@ -1,12 +1,11 @@
-
 /**
- * \file FileTableau.h
- * \brief Classe définissant le type abstrait file
- * \author Abder
+ * \file File.h
+ * \brief Classe définissant le type File
+ * \author Cybil Bourely - CMBOU5
  * \version 0.1
- * \date mai 2011
+ * \date29 septembre 2013
  *
- * Représentation dans un tableau dynamique 
+ * Représentation de la classe File 
  */
 
 #ifndef _FILE_H

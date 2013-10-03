@@ -1,12 +1,13 @@
 /**
  * \file Pile.h
- * \brief Classe définissant le type abstrait pile
- * \author Abder
+ * \brief Classe définissant le type Pile
+ * \author Cybil Bourely - CMBOU5
  * \version 0.1
- * \date mai 2011
+ * \date 02 octobre 2013
  *
- * Représentation dans une liste chaînée
+ * Représentation de la classe Pile 
  */
+
 
 #ifndef PILE_H
 #define PILE_H

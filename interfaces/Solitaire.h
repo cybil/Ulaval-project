@@ -1,3 +1,12 @@
+/**
+ * \file Solitaire.h
+ * \brief Classe définissant le type Solitaire
+ * \author Cybil Bourely - CMBOU5
+ * \version 0.1
+ * \date 02 octobre 2013
+ *
+ * Représentation de la classe Solitaire
+ */
 
 #include <string>
 #include "Colonne.h"

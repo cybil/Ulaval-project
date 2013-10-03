@@ -1,13 +1,9 @@
-/**
- * \file Pile.hpp
- * \brief Le code des opérateurs du type abstrait pile.
- * \author Abder
- * \version 0.1
- * \date septembre 2011
- *
- * Implémentation de la classe générique Pile dans une liste chaînée
- *
- */
+//! \file Pile.hpp
+//! \brief Le code des opérateurs de la liste.
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 0.1
+//! \date 29 septembre 2013
+//! Implémentation de la classe générique Pile
 
 #include <exception>
 
