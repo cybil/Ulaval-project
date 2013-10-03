@@ -77,7 +77,7 @@ void			Solitaire::deplacerColonneAColonne(int p_colonneSource,
 							   int p_colonneDestination,
 							   int p_nbCarte)
 {
-  if (p_nbCarte > m_colonnes[p_colonneSource].getNbCarteVisibles())
+  if (p_nbCarte > m_colonnes[p_colonneSource].getNbCartesVisibles())
     throw std::runtime_error("runtime_error");
   m_colonnes[p_colonneSource].deplacePaquet(m_colonnes[p_colonneDestination], p_nbCarte);
 }

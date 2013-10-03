@@ -101,7 +101,7 @@ int		ColonneCarte::getTailleListe() const
 //! \brief Donne une carte a une position donnee dans la colonne de carte
 //! \param[in] pos est la position de la carte souhaitee
 //! \return une reference constante sur la carte se situant a la position pos
-const Cartes	&ColonneCarte::getCarteAPosition(int p_pos) const
+const Carte	&ColonneCarte::getCarteAPosition(int p_pos) const
 {
   return m_lesCartes.element(p_pos);
 }
