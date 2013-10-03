@@ -21,27 +21,27 @@
 //! \post Une instance de la classe Soliataire est initialisee
 Solitaire::Solitaire() : m_talon(24)
 {
-  std::vector<Cartes>	tabTmp;
+  std::vector<Carte>	tabTmp;
 
    for (int i = 0; i < 4; i++)
      for (int j = 1; j <= 13; j++)
        {
-	 Cartes	newCartes((Cartes::Valeur)j, (Cartes::Sorte)i);
-	 tabTmp.push_back(newCartes); 
+	 Carte	newCarte((Carte::Valeur)j, (Carte::Sorte)i);
+	 tabTmp.push_back(newCarte); 
        }
 
    srand(time(NULL));
    std::random_shuffle(tabTmp.begin(), tabTmp.end());
 
-   int			nbCartesParColonne = 1;
+   int			nbCarteParColonne = 1;
    int			k = 0;
    for (int j = 0; j < 7; j++)
      {
-       Liste<Cartes>	newListe;
-       for (int i = 0; i < nbCartesParColonne; i++)
+       Liste<Carte>	newListe;
+       for (int i = 0; i < nbCarteParColonne; i++)
 	 newListe.ajouter(tabTmp[k++], i + 1);
        m_colonnes[j].initColonneCarte(newListe);
-       nbCartesParColonne++;
+       nbCarteParColonne++;
      }
    while (k < tabTmp.size())
      m_talon.enfiler(tabTmp[k++]);
@@ -70,16 +70,16 @@ void			Solitaire::avancerTalon()
 //! \brief Deplace un nombre de carte d'une colonne a une autre
 //! \param[in] p_colonneSource est le numero de la colonne source
 //! \param[in] p_colonneDestination est le numero de la colonne de destination
-//! \param[in] p_nbCartes est le nombre de cartes a deplacer
+//! \param[in] p_nbCarte est le nombre de cartes a deplacer
 //! \pre p_colonneSource et p_colonneDestination doivent etre compris entre 0 et 6 inclusivement
 //! \exception runtime_error si les parametres ne sont pas coherents avec les regles du jeu
 void			Solitaire::deplacerColonneAColonne(int p_colonneSource,
 							   int p_colonneDestination,
-							   int p_nbCartes)
+							   int p_nbCarte)
 {
-  if (p_nbCartes > m_colonnes[p_colonneSource].getNbCartesVisibles())
+  if (p_nbCarte > m_colonnes[p_colonneSource].getNbCarteVisibles())
     throw std::runtime_error("runtime_error");
-  m_colonnes[p_colonneSource].deplacePaquet(m_colonnes[p_colonneDestination], p_nbCartes);
+  m_colonnes[p_colonneSource].deplacePaquet(m_colonnes[p_colonneDestination], p_nbCarte);
 }
 
 
