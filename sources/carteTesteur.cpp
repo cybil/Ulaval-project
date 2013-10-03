@@ -63,8 +63,9 @@ TEST(testSuperposition, estSuperposableColonne)
   EXPECT_FALSE(c3 <= c4);
 }
 
-int		main(int ac, char **av)
+/*int		main(int ac, char **av)
 {
   ::testing::InitGoogleTest(&ac, av);
   return RUN_ALL_TESTS();
 }
+*/

@@ -52,8 +52,9 @@ TEST(positionColonne, estALaPremierePosition)
   EXPECT_TRUE((test.getCarteAPosition(1)) == carte1);
 }
 
-int		main(int ac, char **av)
+/*int		main(int ac, char **av)
 {
   ::testing::InitGoogleTest(&ac, av);
   return RUN_ALL_TESTS();
 }
+*/

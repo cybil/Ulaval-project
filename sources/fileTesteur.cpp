@@ -74,9 +74,10 @@ TEST(testAccesseur, estAccessible)
   EXPECT_FALSE(test[1]);
   EXPECT_TRUE(test[0]);
 }
-
+/*
 int		main(int ac, char **av)
 {
   ::testing::InitGoogleTest(&ac, av);
   return RUN_ALL_TESTS();
 }
+*/
