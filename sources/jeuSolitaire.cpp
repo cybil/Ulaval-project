@@ -86,7 +86,8 @@ void		affMenu()
   std::cout << "4. Deplacer une(des) carte(s) d'une colonne vers une autre." << std::endl;
   std::cout << "5. Deplacer une carte d'une colonne vers une pile." << std::endl;
   std::cout << "6. Quitter." << std::endl;
-  std::cout << "******************************************************" << std::endl;
+  std::cout << "******************************************" << std::endl;
+  std::cout << "Votre choix: ";
 }
 
 int		main(int ac, char **av)
