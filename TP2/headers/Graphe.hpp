@@ -11,7 +11,7 @@ using namespace std;
 
 //! \brief		Surcharge de l'opérateur de sortie.
 //! \param[in]	p_out		Le flux de sortie.
-//! \param[in]	p_graphe		Le graphe à  afficher.
+//! \param[in]	p_graphe		Le graphe à afficher.
 //! \return	Le flux de sortie.
 //! \pre		l'étiquette est un objet comparable, l'opérateur << y est surchargé
 //! \post		Le nombre de sommets du graphe sera affiché
@@ -19,31 +19,30 @@ using namespace std;
 //! \post		Pour chaque sommet, tous ses liens, le numéro des voisins, seront affichés
 
 template<typename Objet>
-ostream& operator <<(ostream& p_out, const Graphe<Objet>& p_graphe)
+ostream& operator <<(ostream &p_out, const Graphe<Objet> &p_graphe)
 {
-	p_out << "Le graphe contient " << p_graphe.nbSommets << " sommet(s)" << std::endl;
-	typename Graphe<Objet>::Sommet* vertex = p_graphe.listSommets;
+  p_out << "Le graphe contient " << p_graphe.nbSommets << " sommet(s)" << std::endl;
+  typename Graphe<Objet>::Sommet* vertex = p_graphe.listSommets;
 
-	while (vertex != NULL)
+  while (vertex != NULL)
+    {
+      p_out << "Sommet no " << vertex->numero << vertex->m_etiquette << endl;// << std::endl;
+      //Afficher les arcs.
+      typename Graphe<Objet>::Arc* arc = vertex->listeDest;
+      if (arc != NULL)
 	{
-		p_out << "Sommet no " << vertex->numero << vertex->m_etiquette << endl;// << std::endl;
-		//Afficher les arcs.
-		typename Graphe<Objet>::Arc* arc = vertex->listeDest;
-		if (arc != NULL)
-		{
-			p_out << "Ce sommet a des liens vers le(s) sommet(s) : ";
-			while (arc->suivDest != NULL)
-			{
-				p_out << arc->dest->numero << "(" << arc->cout << "), ";
-				arc = arc->suivDest;
-			}
-			p_out << arc->dest->numero << "(" << arc->cout << ")";
-		}
-		p_out << std::endl;
-		vertex = vertex->suivant;
+	  p_out << "Ce sommet a des liens vers le(s) sommet(s) : ";
+	  while (arc->suivDest != NULL)
+	    {
+	      p_out << arc->dest->numero << "(" << arc->cout << "), ";
+	      arc = arc->suivDest;
+	    }
+	  p_out << arc->dest->numero << "(" << arc->cout << ")";
 	}
-
-	return p_out;
+      p_out << std::endl;
+      vertex = vertex->suivant;
+    }
+  return p_out;
 }
 
 //À compléter par les autres méthodes demandées sur le type Graphe
