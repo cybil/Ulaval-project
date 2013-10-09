@@ -1,0 +1,42 @@
+/*
+* LISEZ-MOI
+*/
+
+Sujet: TP1-Solitaire - Algorithmes et structures de donnees
+
+Auteurs:
+
+Cybil Bourely		CMBOU5
+Benjamin De Almeida	BEDEA1
+
+Date:
+
+Le 03 octobre 2013
+
+Contenu:
+
+├── headers
+│   ├── File.hpp
+│   ├── Liste.hpp
+│   └── Pile.hpp
+├── interfaces
+│   ├── Carte.h
+│   ├── Colonne.h
+│   ├── File.h
+│   ├── Liste.h
+│   ├── Pile.h
+│   └── Solitaire.h
+├── LISEZ-MOI.txt
+├── mySolitaire.exe
+└── sources
+    ├── Carte.cpp
+    ├── carteTesteur.cpp
+    ├── Colonne.cpp
+    ├── colonneTesteur.cpp
+    ├── fileTesteur.cpp
+    ├── jeuSolitaire.cpp
+    ├── pileTesteur.cpp
+    ├── Solitaire.cpp
+    └── solitaireTesteur.cpp
+
+20 fichiers
