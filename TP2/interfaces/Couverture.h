@@ -31,7 +31,7 @@ namespace tp2
     //	Connexité, point d'articulation
     // _______________________________________________________
     bool			villesAccessibles();
-    std::vector<Ville>	villesCritiques();
+    std::vector<Ville>		villesCritiques();
 
     // ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
     //	Chemin le plus court

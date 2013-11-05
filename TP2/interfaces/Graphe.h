@@ -132,7 +132,7 @@ public:
   // _________________________________________________________________________________________________
 
 
-  Graph			fermetureGraphe() const ;
+  Graphe		fermetureGraphe() const ;
   bool			estFortementConnexe() const;
   void			getComposantesFortementConnexes(std::vector<std::vector<Objet> > &p_composantes) const;
   int			bellmanFord(const Objet &p_eOrigine, const Objet &p_eDestination,
