@@ -90,4 +90,37 @@ namespace tp2
 	    std::cout << p_vVilles[i - 1] << std::endl;
       }
   }
+  
+  void			afficherVilles()
+  {
+    afficherVilles(m_graphe.listerSommets);
+  }
+  
+  bool			villesAccessibles()
+  {
+    if (m_graphe.estFortementConnexe())
+      return (true);
+    return (false);
+  }
+
+  std::vector<Ville>	villesCritiques()
+  {
+    std::vector<Ville> critiques;
+
+    m_graphe.getPointsArticulation(critiques);
+    return (critiques);
+  }
+
+  std::vector<Ville>	determinerMinParcours(const Ville & p_origine,
+					      const Ville & p_destination, int & p_duree)
+  {
+    
+  }
+
+  std::vector<Ville>	bellManFord(const Ville & p_origine,
+				    const Ville & p_destination, int & p_duree)
+  {
+
+  }
+
 }//namespace tp2
