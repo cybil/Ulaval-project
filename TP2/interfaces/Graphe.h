@@ -174,5 +174,6 @@ private:
   void			_recupererChemin(Sommet *p_destination, std::vector<Objet> &p_chemin);
 
 };
+
 #include "Graphe.hpp"
 #endif
