@@ -603,36 +603,36 @@ void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
 template<typename Objet>
 bool			Graphe<Objet>::estFortementConnexe() const
 {
-  Graphe<Objet>::Sommet *sommet_tmp;
-  std::stack<Graphe<Objet>::Sommet *> pile;
+  // Graphe<Objet>::Sommet *sommet_tmp;
+  // std::stack<Graphe<Objet>::Sommet *> pile;
 
-  pile.push(m_listSommets);
-  //Utilisation de la pile pour un parcours en profondeur
-  while (!pile.empty())
-    {
-      Graphe<Objet>::Arc	*arc_tmp;
+  // pile.push(m_listSommets);
+  // //Utilisation de la pile pour un parcours en profondeur
+  // while (!pile.empty())
+  //   {
+  //     Graphe<Objet>::Arc	*arc_tmp;
 
-      sommet_tmp = pile.top();
-      pile.pop();
-      sommet_tmp->m_etat(true);
-      arc_tmp = sommet_tmp->m_listeDest;
-      while (arc_tmp) // ajoute le nombre de sommets non parcourus
-	{
-	  if (arc_tmp->m_dest->m_etat == false)
-	    pile.push(arc_tmp->m_dest);
-	  arc_tmp = arc_tmp->m_suivDest;
-	}
-    }
+  //     sommet_tmp = pile.top();
+  //     pile.pop();
+  //     sommet_tmp->m_etat(true);
+  //     arc_tmp = sommet_tmp->m_listeDest;
+  //     while (arc_tmp) // ajoute le nombre de sommets non parcourus
+  // 	{
+  // 	  if (arc_tmp->m_dest->m_etat == false)
+  // 	    pile.push(arc_tmp->m_dest);
+  // 	  arc_tmp = arc_tmp->m_suivDest;
+  // 	}
+  //   }
 
-  //verification que tous les sommets ont ete parcourus
-  sommet_tmp = m_listSommets;
-  while (sommet_tmp)
-    {
-      if (sommet_tmp->m_etat == false)
-	return (false);
-      sommet_tmp->m_etat = false;
-      sommet_tmp->m_suivant;
-    }
+  // //verification que tous les sommets ont ete parcourus
+  // sommet_tmp = m_listSommets;
+  // while (sommet_tmp)
+  //   {
+  //     if (sommet_tmp->m_etat == false)
+  // 	return (false);
+  //     sommet_tmp->m_etat = false;
+  //     sommet_tmp->m_suivant;
+  //   }
     
   return true;
 }
@@ -664,35 +664,35 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
 						   const Objet &p_eDestination,
 						   std::vector<Objet> &p_chemin)
 {
-  Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
-  int distance = 0;
+  // Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
+  // int distance = 0;
 
-  while (sommet_tmp)
-    {
-      sommet_tmp->m_cout = 10000000;
-      sommet_tmp->m_predecesseur = NULL;
-      sommet_tmp = sommet_tmp->m_suivant;
-    }
-  sommet_tmp = _getSommet(_getSommet(getNumeroSommet(p_eOrigine)));
-  sommet_tmp->m_cout = 0;
+  // while (sommet_tmp)
+  //   {
+  //     sommet_tmp->m_cout = 10000000;
+  //     sommet_tmp->m_predecesseur = NULL;
+  //     sommet_tmp = sommet_tmp->m_suivant;
+  //   }
+  // sommet_tmp = _getSommet(_getSommet(getNumeroSommet(p_eOrigine)));
+  // sommet_tmp->m_cout = 0;
 
-  for (int i = 0; i < m_nbSommets ; i++)
-    {
-      Graphe<Objet>::Arc	*arc_tmp;
+  // for (int i = 0; i < m_nbSommets ; i++)
+  //   {
+  //     Graphe<Objet>::Arc	*arc_tmp;
 
-      arc_tmp = sommet_tmp->m_listDest;
-      while (arc_tmp)
-	{
-	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
-	    {
-	      arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
-	      arc_tmp->m_dest->m_predecesseur = sommet_tmp;
-	    }
-	  arc_tmp = arc_tmp->m_suivDest;
-	}
+  //     arc_tmp = sommet_tmp->m_listDest;
+  //     while (arc_tmp)
+  // 	{
+  // 	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
+  // 	    {
+  // 	      arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
+  // 	      arc_tmp->m_dest->m_predecesseur = sommet_tmp;
+  // 	    }
+  // 	  arc_tmp = arc_tmp->m_suivDest;
+  // 	}
       
 
-    }
+  //   }
 
   return -1;
 }
@@ -742,16 +742,17 @@ int			Graphe<Objet>::dijkstra(const Objet &p_eOrigine,
       graphe.enleverSommet(n1->m_numero);
 
       // On parcours la liste des arcs adjacent au sommet trouve
-      std::vector<int>::iterator it = graphe.listerSommetsAdjacents(n1->m_numero).begin();
-      while (it != graphe.listerSommetsAdjacents(n1->m_numero).end())
+      Graphe<Objet>::Arc	*arcTmp = n1->m_listeDest;
+      while (arcTmp)
 	{
 	  // On trouve l'arc
-	  Graphe<Objet>::Sommet	*n2 = _getSommet(*it);
+	  Graphe<Objet>::Sommet	*n2 = arcTmp->m_dest;
 	  if (n2->m_cout > n1->m_cout + getCoutArc(n1->m_numero, n2->m_numero))
 	    {
 	      n2->m_cout = n1->m_cout + getCoutArc(n1->m_numero, n2->m_numero);
-	      n2->precedent = n1;
-	      graphe.ajouterSommet(n2); // je pense que c'est pas ca...
+	      n2->m_precedent = n1;
+	      n2->m_etat = true;
+	      // graphe.ajouterSommet(n2); // je pense que c'est pas ca...
 	    }
 	}
       pasEncoreVu = pasEncoreVu->m_suivant;
@@ -760,14 +761,16 @@ int			Graphe<Objet>::dijkstra(const Objet &p_eOrigine,
   // Reconstruction du chemin dans le sens inverse
 
   Graphe<Objet>::Sommet		*n = _getSommet(getNumeroSommet(p_eDestination));	
+  int				coutTotal = 0;
   while (n != _getSommet(getNumeroSommet(p_eOrigine)))
     {
+      coutTotal += n->m_cout;
       p_chemin.push_back(getEtiquetteSommet(n->m_numero));
-      n = n->precedent;
+      n = n->m_precedent;
     }
   p_chemin.push_back(p_eOrigine);
   std::reverse(p_chemin.begin(), p_chemin.end());
-  return p_chemin;
+  return coutTotal;
 }
 
 //! \brief Trouve les points d'articulation du graphe et les retourne
@@ -802,9 +805,11 @@ void				Graphe<Objet>::_initPathFinding(const Objet &p_eOrigine,
 {
   Graphe<Objet>::Sommet		*tmp = p_origine;
   tmp->m_cout = 0;
+  tmp->m_etat = true;
   tmp = tmp->m_suivant;
   while (tmp)
     {
+      tmp->m_etat = false;
       tmp->m_cout = 10000000;
       tmp = tmp->m_suivant;
     }
