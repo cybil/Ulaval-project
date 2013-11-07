@@ -8,11 +8,11 @@
 
 #include <iostream>
 #include "gtest/gtest.h"
-#include "Couverture.h"
+#include "Graphe.h"
 
 TEST(testNombreSommets, nombresSommet)
 {
-  Graph<int>	test;
+  Graphe<int>	test;
 
   EXPECT_FALSE(test.nombreSommets());
   test.ajouterSommet(1, 1);
@@ -23,7 +23,7 @@ TEST(testNombreSommets, nombresSommet)
 
 TEST(testEstVide, estVide)
 {
-  Graph<int>	test;
+  Graphe<int>	test;
 
   EXPECT_TRUE(test.estVide());
   test.ajouterSommet(1, 1);
@@ -34,7 +34,7 @@ TEST(testEstVide, estVide)
 
 TEST(TestSommetExiste, SommetExiste)
 {
-  Graph<int>	test;
+  Graphe<int>	test;
 
   EXPECT_FALSE(test.sommetExiste(1));
   test.ajouterSommet(1, 1);
@@ -45,7 +45,7 @@ TEST(TestSommetExiste, SommetExiste)
 
 TEST(testGetNumeroSommet, numeroEstRecu)
 {
-  Graph<int>	test;
+  Graphe<int>	test;
 
   EXPECT_FALSE(test.getNumeroSommet(1));
   test.ajouterSommet(1, 1);
@@ -56,7 +56,7 @@ TEST(testGetNumeroSommet, numeroEstRecu)
 
 TEST(testGetEtiquetteSommet, etiquetteEstRecu)
 {
-  Graph<int>	test;
+  Graphe<int>	test;
 
   EXPECT_FALSE(test.getEtiquetteSommet(1));
   test.ajouterSommet(1, 1);
@@ -67,17 +67,29 @@ TEST(testGetEtiquetteSommet, etiquetteEstRecu)
 
 TEST(testOrdreSortieSommet, bonOrdreDeSortie)
 {
-   Graph<int>	test;
+   Graphe<int>	test;
+
+   test.ajouterSommet(1, 1);
+   test.ajouterSommet(2, 2);
+   EXPECT_EQ(0, test.ordreSortieSommeT(1));
+   test.ajouterArc(1, 2, 3);
+   EXPECT_EQ(1, test.ordreSortieSommeT(1));
 }
 
 TEST(testEntreeSommet, bonOrdreEntree)
 {
-   Graph<int>	test;
+   Graphe<int>	test;
+
+   test.ajouterSommet(1, 1);
+   test.ajouterSommet(2, 2);
+   EXPECT_EQ(0, test.ordreEntreSommet(1));
+   test.ajouterArc(2, 1, 3);
+   EXPECT_EQ(1, test.ordreSortieSommeT(1));
 }
 
 TEST(testArcExiste, arcExiste)
 {
-   Graph<int>	test;
+   Graphe<int>	test;
 
    test.ajouterSommet(1, 1);
    test.ajouterSommet(2, 2);
@@ -88,11 +100,23 @@ TEST(testArcExiste, arcExiste)
 
 TEST(testCoutArc, arcAUnBonCout)
 {
-   Graph<int>	test;
-
-   test.ajouterSommet(1, 1);
-   test.ajouterSommet(2, 2);
-   EXPECT_FALSE(test.getCoutArc(1, 2));
-   test.ajouterArc(1, 2, 3);
-   EXPECT_EQ(3, test.getCoutArc(1, 2));
+  Graphe<int>	test;
+  
+  test.ajouterSommet(1, 1);
+  test.ajouterSommet(2, 2);
+  EXPECT_FALSE(test.getCoutArc(1, 2));
+  test.ajouterArc(1, 2, 3);
+  EXPECT_EQ(3, test.getCoutArc(1, 2));
 }
+
+TEST(fortementConnexe, estFortementConnexe)
+{
+  Graphe<int>	test;
+  
+  test.ajouterSommet(1, 1);
+  test.ajouterSommet(2, 2);
+  test.ajouterArc(1, 2, 3);
+  test.ajouterArc(2, 1, 3);
+  EXPECT_TRUE(test.estFortementConnexe());
+}
+

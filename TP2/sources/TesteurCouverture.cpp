@@ -12,11 +12,14 @@
 
 TEST(testCreation, estCree)
 {
-  Couverture test("CheminFichier");
+  Couverture test("misc/couverture.txt");
 
   EXPECT_TRUE(test.villesAcessibles());
 }
 
-TEST()
+TEST(testCritique, contientVilleCritique)
 {
+  Couverture test("misc/couverture.txt");
+
+  EXPECT_TRUE(!test.villesCritiques().empty());
 }
