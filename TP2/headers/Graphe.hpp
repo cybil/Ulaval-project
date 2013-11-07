@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <stack>
 #include "Graphe.h"
 
 /**
@@ -18,7 +19,7 @@
 //! \post Le sommet est initialise avec les parametres indique
 template<typename Objet>
 Graphe<Objet>::Sommet::Sommet(int p_numero, const Objet &p_etiquette)
-  : m_numero(p_numero), m_etiquette(p_etiquette), m_listeDest(NULL), m_suivant(NULL)
+  : m_numero(p_numero), m_etiquette(p_etiquette), m_listeDest(NULL), m_etat(false), m_suivant(NULL)
 {
 }
 
@@ -43,16 +44,16 @@ Graphe<Objet>::Sommet::Sommet(Graphe<Objet>::Sommet *p_source)
 template<typename Objet>
 Graphe<Objet>::Sommet::~Sommet()
 {
-  Graphe<Objet>::Arc		*arcTmp = m_listeDest;
-  Graphe<Objet>::Arc		*aDetruire;
+  // Graphe<Objet>::Arc		*arcTmp = m_listeDest;
+  // Graphe<Objet>::Arc		*aDetruire;
 
-  while (arcTmp)
-    {
-      aDetruire = arcTmp;
-      arcTmp = arcTmp->m_suivDest;
-      delete aDetruire;
-    }
-  delete arcTmp;
+  // while (arcTmp)
+  //   {
+  //     aDetruire = arcTmp;
+  //     arcTmp = arcTmp->m_suivDest;
+  //     delete aDetruire;
+  //   }
+  // delete arcTmp;
 }
 
 //! \brief Constructeur avec parametres
@@ -235,13 +236,22 @@ void				Graphe<Objet>::enleverArc(int p_numOrigine, int p_numDestination)
     throw std::logic_error("logic_error - enlever arc");
   Graphe<Objet>::Sommet		*tmp = _getSommet(p_numOrigine);
 
-  Graphe<Objet>::Arc	*arcTmp = tmp->listeDest;
+  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
   while (arcTmp)
     {
-      if (arcTmp->m_suivDest && arcTmp->m_suivDest->m_dest->m_numero == p_numDestination)
+      if (arcTmp->m_dest->m_numero == p_numDestination)
+      	{
+      	  Graphe<Objet>::Arc	*aDetruire = arcTmp;
+      	  tmp->m_listeDest = arcTmp->m_suivDest;
+      	  delete aDetruire;
+      	  return ;
+	}
+      if (arcTmp->m_suivDest->m_dest->m_numero == p_numDestination)
 	{
-	  arcTmp->m_suivDest = arcTmp->m_suivDest->m_suivDest;
-	  delete arcTmp->m_suivDest;
+      	  Graphe<Objet>::Arc	*aDetruire = arcTmp->m_suivDest;
+      	  arcTmp->m_suivDest = arcTmp->m_suivDest->m_suivDest;
+      	  delete aDetruire;
+	  return ;
 	}
       arcTmp = arcTmp->m_suivDest;
     }
@@ -257,7 +267,7 @@ void				Graphe<Objet>::enleverArc(int p_numOrigine, int p_numDestination)
 template<typename Objet>
 int				Graphe<Objet>::nombreSommets() const
 {
-  return m_nbSommets;  
+  return m_nbSommets;
 }
 
 //! \brief Indique si la liste de sommet est vide ou non
@@ -489,14 +499,14 @@ int				Graphe<Objet>::getCoutArc(int p_numOrigine,
  * Friend
  */
 
-//! \brief		Surcharge de l'opérateur de sortie.
-//! \param[in]	p_out		Le flux de sortie.
-//! \param[in]	p_graphe		Le graphe à afficher.
-//! \return	Le flux de sortie.
-//! \pre		l'étiquette est un objet comparable, l'opérateur << y est surchargé
-//! \post		Le nombre de sommets du graphe sera affiché
-//! \post		Pour chaque sommet, son numéro, son étiquette seront affichés
-//! \post		Pour chaque sommet, tous ses liens, le numéro des voisins, seront affichés
+//! \brief Surcharge de l'opérateur de sortie.
+//! \param[in] p_outx Le flux de sortie.
+//! \param[in] p_graphe Le graphe à afficher.
+//! \return Le flux de sortie.
+//! \pre l'étiquette est un objet comparable, l'opérateur << y est surchargé
+//! \post Le nombre de sommets du graphe sera affiché
+//! \post Pour chaque sommet, son numéro, son étiquette seront affichés
+//! \post Pour chaque sommet, tous ses liens, le numéro des voisins, seront affichés
 template<typename Objet>
 std::ostream			&operator<<(std::ostream &p_out, const Graphe<Objet> &p_graphe)
 {
@@ -539,7 +549,7 @@ template<typename Objet>
 Graphe<Objet>			Graphe<Objet>::fermetureGraphe() const
 {
   Graphe<Objet>			graphe;
-  int				matriceAdj[m_nbSommets][m_nbSommets];	
+  int				matriceAdj[m_nbSommets][m_nbSommets];
 
   graphe = *this;
   for (int i = 0; i < m_nbSommets; i++)
@@ -560,7 +570,7 @@ Graphe<Objet>			Graphe<Objet>::fermetureGraphe() const
 	if (_getCoutArc(i, k) != -1
 	    && _getCoutArc(k, j) != -1
 	    && (_getCoutArc(i, k) + _getCoutArc(k, j)) < matriceAdj[i][j])
-	  matriceAdj[i][j] = MIN(matriceAdj[i][j], _getCoutArc(i, k) + _getCoutArc(k, j)); 
+	  matriceAdj[i][j] = MIN(matriceAdj[i][j], _getCoutArc(i, k) + _getCoutArc(k, j));
 
   for (int i = 0; i < graphe.nombreSommets(); i++)
     {
@@ -569,21 +579,19 @@ Graphe<Objet>			Graphe<Objet>::fermetureGraphe() const
   	  if (graphe.arcExiste(i, j) == false
 	      && matriceAdj[i][j] != 10000000
 	      && i != j)
-  	    graphe.ajouterArc(i, j, matriceAdj[i][j]);
-  	  else if (graphe.arcExiste(i, j) == true
+	    graphe.ajouterArc(i, j, matriceAdj[i][j]);
+	  else if (graphe.arcExiste(i, j) == true
 		   && graphe.getCoutArc(i, j) > matriceAdj[i][j])
   	    graphe._modifierCoutArc(i, j, matriceAdj[i][j]);
   	}
-    }  
-
-  std::cout << graphe;
+    }
   return graphe;
 }
 
 template<typename Objet>
 void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
 								int p_numDestination, int p_cout)
-{  
+{
   Graphe<Objet>::Sommet		*tmp = _getSommet(p_numOrigine);
 
   while (tmp->m_listeDest)
@@ -603,36 +611,36 @@ void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
 template<typename Objet>
 bool			Graphe<Objet>::estFortementConnexe() const
 {
-  // Graphe<Objet>::Sommet *sommet_tmp;
-  // std::stack<Graphe<Objet>::Sommet *> pile;
+  Graphe<Objet>::Sommet *sommet_tmp;
+  std::stack<Graphe<Objet>::Sommet *> pile;
 
-  // pile.push(m_listSommets);
-  // //Utilisation de la pile pour un parcours en profondeur
-  // while (!pile.empty())
-  //   {
-  //     Graphe<Objet>::Arc	*arc_tmp;
+  pile.push(m_listSommets);
+  //Utilisation de la pile pour un parcours en profondeur
+  while (!pile.empty())
+    {
+      Graphe<Objet>::Arc	*arc_tmp;
 
-  //     sommet_tmp = pile.top();
-  //     pile.pop();
-  //     sommet_tmp->m_etat(true);
-  //     arc_tmp = sommet_tmp->m_listeDest;
-  //     while (arc_tmp) // ajoute le nombre de sommets non parcourus
-  // 	{
-  // 	  if (arc_tmp->m_dest->m_etat == false)
-  // 	    pile.push(arc_tmp->m_dest);
-  // 	  arc_tmp = arc_tmp->m_suivDest;
-  // 	}
-  //   }
+      sommet_tmp = pile.top();
+      pile.pop();
+      sommet_tmp->m_etat = true;
+      arc_tmp = sommet_tmp->m_listeDest;
+      while (arc_tmp) // ajoute le nombre de sommets non parcourus
+  	{
+  	  if (arc_tmp->m_dest && arc_tmp->m_dest->m_etat == false)
+  	    pile.push(arc_tmp->m_dest);
+  	  arc_tmp = arc_tmp->m_suivDest;
+  	}
+    }
 
-  // //verification que tous les sommets ont ete parcourus
-  // sommet_tmp = m_listSommets;
-  // while (sommet_tmp)
-  //   {
-  //     if (sommet_tmp->m_etat == false)
-  // 	return (false);
-  //     sommet_tmp->m_etat = false;
-  //     sommet_tmp->m_suivant;
-  //   }
+  //verification que tous les sommets ont ete parcourus
+  sommet_tmp = m_listSommets;
+  while (sommet_tmp)
+    {
+      if (sommet_tmp->m_etat == false)
+  	return false;
+      sommet_tmp->m_etat = false;
+      sommet_tmp = sommet_tmp->m_suivant;
+    }
     
   return true;
 }
@@ -645,7 +653,7 @@ bool			Graphe<Objet>::estFortementConnexe() const
 template<typename Objet>
 void			Graphe<Objet>::getComposantesFortementConnexes(std::vector<std::vector<Objet> > &p_composantes) const
 {
-  
+ 
 }
 
 //! \brief Trouve le plus court chemin entre deux point en utlisant l'algorithme de Bellman-Ford et le retourne
@@ -664,37 +672,59 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
 						   const Objet &p_eDestination,
 						   std::vector<Objet> &p_chemin)
 {
-  // Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
-  // int distance = 0;
+  Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
 
-  // while (sommet_tmp)
-  //   {
-  //     sommet_tmp->m_cout = 10000000;
-  //     sommet_tmp->m_predecesseur = NULL;
-  //     sommet_tmp = sommet_tmp->m_suivant;
-  //   }
-  // sommet_tmp = _getSommet(_getSommet(getNumeroSommet(p_eOrigine)));
-  // sommet_tmp->m_cout = 0;
+  while (sommet_tmp)
+    {
+      sommet_tmp->m_cout = 10000000;
+      sommet_tmp->m_predecesseur = NULL;
+      sommet_tmp = sommet_tmp->m_suivant;
+    }
+  sommet_tmp = _getSommet(getNumeroSommet(p_eOrigine));
+  sommet_tmp->m_cout = 0;
 
-  // for (int i = 0; i < m_nbSommets ; i++)
-  //   {
-  //     Graphe<Objet>::Arc	*arc_tmp;
+  for (int i = 0; i < m_nbSommets ; i++)
+    {
+      sommet_tmp = m_listSommets;
+      while (sommet_tmp)
+	{
+	  Graphe<Objet>::Arc	*arc_tmp;
+	  
+	  arc_tmp = sommet_tmp->m_listeDest;
+	  while (arc_tmp)
+	    {
+	      if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
+		{
+		  arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
+		  arc_tmp->m_dest->m_predecesseur = sommet_tmp;
+		  
+		}
+	      arc_tmp = arc_tmp->m_suivDest;
+	    }
+	  sommet_tmp = sommet_tmp->m_suivant;
+	}
+    }
 
-  //     arc_tmp = sommet_tmp->m_listDest;
-  //     while (arc_tmp)
-  // 	{
-  // 	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
-  // 	    {
-  // 	      arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
-  // 	      arc_tmp->m_dest->m_predecesseur = sommet_tmp;
-  // 	    }
-  // 	  arc_tmp = arc_tmp->m_suivDest;
-  // 	}
-      
+  while (sommet_tmp)
+    {
+      Graphe<Objet>::Arc	*arc_tmp;
 
-  //   }
-
-  return -1;
+      arc_tmp = sommet_tmp->m_listeDest;
+      while (arc_tmp)
+	{
+	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
+	    return (-1);
+	  arc_tmp = arc_tmp->m_suivDest;
+	}
+      sommet_tmp = sommet_tmp->m_suivant;
+    }
+  sommet_tmp = _getSommet(getNumeroSommet(p_eDestination));
+  while (sommet_tmp->m_cout != 0)
+    {
+      p_chemin.push_back(sommet_tmp->m_etiquette);
+      sommet_tmp = sommet_tmp->m_predecesseur;
+    }
+  return _getSommet(getNumeroSommet(p_eDestination))->m_cout;
 }
 
 template<typename Objet>
@@ -760,7 +790,7 @@ int			Graphe<Objet>::dijkstra(const Objet &p_eOrigine,
 
   // Reconstruction du chemin dans le sens inverse
 
-  Graphe<Objet>::Sommet		*n = _getSommet(getNumeroSommet(p_eDestination));	
+  Graphe<Objet>::Sommet		*n = _getSommet(getNumeroSommet(p_eDestination));
   int				coutTotal = 0;
   while (n != _getSommet(getNumeroSommet(p_eOrigine)))
     {
