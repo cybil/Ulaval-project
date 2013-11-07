@@ -88,7 +88,7 @@ namespace tp2
     else
       {
 	for (unsigned int i = p_vVilles.size(); i > 0; i--)
-	    std::cout << p_vVilles[i - 1] << std::endl;
+	  std::cout << p_vVilles[i - 1] << std::endl;
       }
   }
   

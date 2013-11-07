@@ -159,6 +159,7 @@ private:
   Arc			*_getArc(Sommet *p_sommet1, Sommet *p_sommet2) const;
   int			_getCoutArc(int p_numOrigine, int p_numDestination) const;
   void			_modifierCoutArc(int p_numOrigine, int p_numDestination, int p_cout);
+  Sommet		*_minimumCout(Sommet *p_s);
 
   // ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
   //	Méthodes auxiliaires (destruction + copie)

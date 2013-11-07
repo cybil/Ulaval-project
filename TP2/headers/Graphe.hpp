@@ -5,6 +5,7 @@
 //! \date 2013-10-03
 
 #include <iostream>
+#include <algorithm>
 #include "Graphe.h"
 
 /**
@@ -178,7 +179,7 @@ void				Graphe<Objet>::enleverSommet(int p_numero)
 	  if (tmp->m_precedent)
 	    tmp->m_precedent->m_suivant = tmp->m_suivant;
 	  if (tmp->m_suivant)
-	  tmp->m_suivant->m_precedent = tmp->m_precedent;
+	    tmp->m_suivant->m_precedent = tmp->m_precedent;
 	  delete tmp;
 	  --m_nbSommets;
 	}
@@ -202,27 +203,20 @@ void				Graphe<Objet>::ajouterArc(int p_numOrigine, int p_numDestination, int p_
       || sommetExiste(p_numDestination) == false)
     throw std::logic_error("logic_error - ajouter arc (sommet non existant)");
   Graphe<Objet>::Arc		*nouvelArc = new Graphe<Objet>::Arc(_getSommet(p_numDestination), p_cout);
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Sommet		*tmp = _getSommet(p_numOrigine);
 
-  while (tmp)
+  if (tmp->m_listeDest == NULL)
+    tmp->m_listeDest = nouvelArc;
+  else
     {
-      if (tmp->m_numero == p_numOrigine)
+      Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
+      while (arcTmp && arcTmp->m_suivDest)
 	{
-	  if (tmp->m_listeDest == NULL)
-	    tmp->m_listeDest = nouvelArc;
-	  else
-	    {
-	      Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	      while (arcTmp && arcTmp->m_suivDest)
-		{
-		  if (arcTmp->m_dest->m_numero == p_numDestination)
-		    throw std::logic_error("logic_error - ajouter arc (arc deja existant)");
-		  arcTmp = arcTmp->m_suivDest;
-		}
-	      arcTmp->m_suivDest = nouvelArc;
-	    }
+	  if (arcTmp->m_dest->m_numero == p_numDestination)
+	    throw std::logic_error("logic_error - ajouter arc (arc deja existant)");
+	  arcTmp = arcTmp->m_suivDest;
 	}
-      tmp = tmp->m_suivant;
+      arcTmp->m_suivDest = nouvelArc;
     }
 }
 
@@ -239,24 +233,17 @@ void				Graphe<Objet>::enleverArc(int p_numOrigine, int p_numDestination)
 {
   if (arcExiste(p_numOrigine, p_numDestination) == false)
     throw std::logic_error("logic_error - enlever arc");
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Sommet		*tmp = _getSommet(p_numOrigine);
 
-  while (tmp)
+  Graphe<Objet>::Arc	*arcTmp = tmp->listeDest;
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numOrigine)
+      if (arcTmp->m_suivDest && arcTmp->m_suivDest->m_dest->m_numero == p_numDestination)
 	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->listeDest;
-	  while (arcTmp)
-	    {
-	      if (arcTmp->m_suivDest && arcTmp->m_suivDest->m_dest->m_numero == p_numDestination)
-		{
-		  arcTmp->m_suivDest = arcTmp->m_suivDest->m_suivDest;
-		  delete arcTmp->m_suivDest;
-		}
-	      arcTmp = arcTmp->m_suivDest;
-	    }
+	  arcTmp->m_suivDest = arcTmp->m_suivDest->m_suivDest;
+	  delete arcTmp->m_suivDest;
 	}
-      tmp = tmp->m_suivant;
+      arcTmp = arcTmp->m_suivDest;
     }
 }
 
@@ -369,15 +356,7 @@ Objet				Graphe<Objet>::getEtiquetteSommet(int p_numero) const
 {
   if (sommetExiste(p_numero) == false)
     throw std::logic_error("logic_error - get etiquette");
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
-
-  while (tmp)
-    {
-      if (tmp->m_numero == p_numero)
-	return tmp->m_etiquette;
-      tmp = tmp->m_suivant;
-    }
-  throw std::logic_error("logic_error - get etiquette");
+  return _getSommet(p_numero)->m_etiquette;
 }
 
 //! \brief Retourne l'ordre d'entree d'un sommet
@@ -391,24 +370,15 @@ int				Graphe<Objet>::ordreSortieSommet(int p_numero) const
 {
   if (sommetExiste(p_numero) == false)
     throw std::logic_error("logic_error - ordre de sortie");
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Arc		*arcTmp = _getSommet(p_numero)->m_listeDest;
+  int				i = 0;
 
-  while (tmp)
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numero)
-	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	  int			i = 0;
-	  while (arcTmp)
-	    {
-	      arcTmp = arcTmp->m_suivDest;
-	      ++i;
-	    }
-	  return i;
-	}
-      tmp = tmp->m_suivant;
+      arcTmp = arcTmp->m_suivDest;
+      ++i;
     }
-  throw std::logic_error("logic_error - ordre de sortie");
+  return i;
 }
 
 //! \brief Retourne l'ordre d'entree d'un sommet
@@ -422,12 +392,13 @@ int				Graphe<Objet>::ordreEntreeSommet(int p_numero) const
 {
   if (sommetExiste(p_numero) == false)
     throw std::logic_error("logic_error - ordre d'entree");
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
   int				i = 0;
+  Graphe<Objet>::Sommet		*tmp = m_listSommets;
 
   while (tmp)
     {
-      Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
+      Graphe<Objet>::Arc		*arcTmp = tmp->m_listeDest;
+  
       while (arcTmp)
 	{
 	  if (arcTmp->m_dest->m_numero == p_numero)
@@ -451,21 +422,12 @@ std::vector<int>		Graphe<Objet>::listerSommetsAdjacents(int p_numero) const
   if (sommetExiste(p_numero) == false)
     throw std::logic_error("logic_error - lister sommets adjacents");
   std::vector<int>		listeSommetsAdjacent;
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Arc		*arcTmp = _getSommet(p_numero)->m_listeDest;
 
-  while (tmp)
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numero)
-	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	  while (arcTmp)
-	    {
-	      listeSommetsAdjacent.push_back(arcTmp->m_dest);
-	      arcTmp = arcTmp->m_suivDest;
-	    }
-	  return listeSommetsAdjacent;
-	}
-      tmp = tmp->m_suivant;
+      listeSommetsAdjacent.push_back(arcTmp->m_dest);
+      arcTmp = arcTmp->m_suivDest;
     }
   return listeSommetsAdjacent;
 }
@@ -487,21 +449,13 @@ bool				Graphe<Objet>::arcExiste(int p_numOrigine,
 {
   if (sommetExiste(p_numOrigine) == false || sommetExiste(p_numDestination) == false)
     return false;
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Arc	*arcTmp = _getSommet(p_numOrigine)->m_listeDest;
 
-  while (tmp)
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numOrigine)
-	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	  while (arcTmp)
-	    {
-	      if (arcTmp->m_dest->m_numero == p_numDestination)
-		return true;
-	      arcTmp = arcTmp->m_suivDest;
-	    }
-	}
-      tmp = tmp->m_suivant;
+      if (arcTmp->m_dest->m_numero == p_numDestination)
+	return true;
+      arcTmp = arcTmp->m_suivDest;
     }
   return false;
 }
@@ -520,21 +474,13 @@ int				Graphe<Objet>::getCoutArc(int p_numOrigine,
 {
   if (arcExiste(p_numOrigine, p_numDestination) == false)
     throw std::logic_error("logic_error - get cout arc");
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
+  Graphe<Objet>::Arc	*arcTmp = _getSommet(p_numOrigine)->m_listeDest;
 
-  while (tmp)
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numOrigine)
-	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	  while (arcTmp)
-	    {
-	      if (arcTmp->m_dest->m_numero == p_numDestination)
-		return arcTmp->m_cout;
-	      arcTmp = arcTmp->m_suivDest;
-	    }
-	}
-      tmp = tmp->m_suivant;
+      if (arcTmp->m_dest->m_numero == p_numDestination)
+	return arcTmp->m_cout;
+      arcTmp = arcTmp->m_suivDest;
     }
   throw std::logic_error("logic_error - get cout arc");
 }
@@ -645,7 +591,7 @@ void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
       if (tmp->m_listeDest->m_dest->m_numero == p_numDestination)
 	{
 	  tmp->m_listeDest->m_cout = p_cout;
-	  break;
+	  return;
 	}
       tmp->m_listeDest = tmp->m_listeDest->m_suivDest;
     }
@@ -690,6 +636,20 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
   return -1;
 }
 
+template<typename Objet>
+typename Graphe<Objet>::Sommet		*Graphe<Objet>::_minimumCout(Graphe<Objet>::Sommet *p_s)
+{
+  Graphe<Objet>::Arc		*minArc = p_s->m_listeDest;
+  Graphe<Objet>::Arc		*arcTmp = p_s->m_listeDest;
+  while (arcTmp)
+    {
+      if (arcTmp->m_cout < minArc->m_cout)
+	minArc = arcTmp;
+      arcTmp = arcTmp->m_suivDest;
+    }
+  return minArc->m_dest;
+}
+
 //! \brief Trouve le plus court chemin entre deux points en utlisant l'algorithme de Dijkstra et le retourne
 //! \pre Il y a assez de memoire pour placer les composantes du chemin 'chemin'
 //! \post Le temps de transmission total est retourne, -1 s'il n'y a pas de chemin
@@ -706,7 +666,47 @@ int			Graphe<Objet>::dijkstra(const Objet &p_eOrigine,
 						const Objet &p_eDestination,
 						std::vector<Objet> &p_chemin)
 {
-  return -1;
+  Graphe<Objet>		graphe = *this;
+  // graphe._initPathFinding(p_eOrigine, p_eDestination,
+  // 			  graphe._getSommet(graphe.getNumeroSommet(p_eOrigine)),
+  // 			  graphe._getSommet(graphe.getNumeroSommet(p_eDestination)));
+  Graphe<Objet>::Sommet	*pasEncoreVu = graphe.m_listSommets;
+  while (pasEncoreVu != NULL)
+    {
+      Graphe<Objet>::Sommet	*n1;
+
+      // On cherche l'arc adjacent du poids le plus faible
+      n1 = graphe._minimumCout(pasEncoreVu);
+      // On enleve le sommet du graphe
+      graphe.enleverSommet(n1->m_numero);
+
+      // On parcours la liste des arcs adjacent au sommet trouve
+      std::vector<int>::iterator it = graphe.listerSommetsAdjacents(n1->m_numero).begin();
+      while (it != graphe.listerSommetsAdjacents(n1->m_numero).end())
+	{
+	  // On trouve l'arc
+	  Graphe<Objet>::Sommet	*n2 = _getSommet(*it);
+	  if (n2->m_cout > n1->m_cout + getCoutArc(n1->m_numero, n2->m_numero))
+	    {
+	      n2->m_cout = n1->m_cout + getCoutArc(n1->m_numero, n2->m_numero);
+	      n2->precedent = n1;
+	      graphe.ajouterSommet(n2); // je pense que c'est pas ca...
+	    }
+	}
+      pasEncoreVu = pasEncoreVu->m_suivant;
+    }
+
+  // Reconstruction du chemin dans le sens inverse
+
+  Graphe<Objet>::Sommet		*n = _getSommet(getNumeroSommet(p_eDestination));	
+  while (n != _getSommet(getNumeroSommet(p_eOrigine)))
+    {
+      p_chemin.push_back(getEtiquetteSommet(n->m_numero));
+      n = n->precedent;
+    }
+  p_chemin.push_back(p_eOrigine);
+  std::reverse(p_chemin.begin(), p_chemin.end());
+  return p_chemin;
 }
 
 //! \brief Trouve les points d'articulation du graphe et les retourne
@@ -719,6 +719,7 @@ void			Graphe<Objet>::getPointsArticulation(std::vector<Objet> &p_sommets)
 {
 
 }
+
 
 /**
  * Methodes auxiliaires
@@ -738,7 +739,14 @@ void				Graphe<Objet>::_initPathFinding(const Objet &p_eOrigine,
 								Sommet *&p_origine,
 								Sommet *&p_destination)
 {
-
+  Graphe<Objet>::Sommet		*tmp = p_origine;
+  tmp->m_cout = 0;
+  tmp = tmp->m_suivant;
+  while (tmp)
+    {
+      tmp->m_cout = 10000000;
+      tmp = tmp->m_suivant;
+    }
 }
 
 //! \brief Trouve l'adresse d'un sommet a partir de son numero
@@ -757,7 +765,7 @@ typename Graphe<Objet>::Sommet		*Graphe<Objet>::_getSommet(int p_numero) const
 	return tmp;
       tmp = tmp->m_suivant;
     }
-    throw std::logic_error("logic_error");
+  throw std::logic_error("logic_error");
 }
 
 //! \brief Trouve l'adresse d'un arc entre deux sommets
@@ -787,25 +795,16 @@ typename Graphe<Objet>::Arc		*Graphe<Objet>::_getArc(Sommet *p_sommet1, Sommet *
 //! \return Le cout de l'arc entre les deux sommets, -1 si il n'existe pas
 template<typename Objet>
 int				Graphe<Objet>::_getCoutArc(int p_numOrigine,
-							  int p_numDestination) const
+							   int p_numDestination) const
 {
   if (arcExiste(p_numOrigine, p_numDestination) == false)
     return -1;
-  Graphe<Objet>::Sommet		*tmp = m_listSommets;
-
-  while (tmp)
+  Graphe<Objet>::Arc	*arcTmp = _getSommet(p_numOrigine)->m_listeDest;
+  while (arcTmp)
     {
-      if (tmp->m_numero == p_numOrigine)
-	{
-	  Graphe<Objet>::Arc	*arcTmp = tmp->m_listeDest;
-	  while (arcTmp)
-	    {
-	      if (arcTmp->m_dest->m_numero == p_numDestination)
-		return arcTmp->m_cout;
-	      arcTmp = arcTmp->m_suivDest;
-	    }
-	}
-      tmp = tmp->m_suivant;
+      if (arcTmp->m_dest->m_numero == p_numDestination)
+	return arcTmp->m_cout;
+      arcTmp = arcTmp->m_suivDest;
     }
   return -1;
 }
