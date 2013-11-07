@@ -603,14 +603,14 @@ void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
 template<typename Objet>
 bool			Graphe<Objet>::estFortementConnexe() const
 {
-  Sommet *sommet_tmp;
-  std::stack<Sommet *> pile;
+  Graphe<Objet>::Sommet *sommet_tmp;
+  std::stack<Graphe<Objet>::Sommet *> pile;
 
   pile.push(m_listSommets);
   //Utilisation de la pile pour un parcours en profondeur
   while (!pile.empty())
     {
-      Arc	*arc_tmp;
+      Graphe<Objet>::Arc	*arc_tmp;
 
       sommet_tmp = pile.top();
       pile.pop();
@@ -664,6 +664,36 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
 						   const Objet &p_eDestination,
 						   std::vector<Objet> &p_chemin)
 {
+  Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
+  int distance = 0;
+
+  while (sommet_tmp)
+    {
+      sommet_tmp->m_cout = 10000000;
+      sommet_tmp->m_predecesseur = NULL;
+      sommet_tmp = sommet_tmp->m_suivant;
+    }
+  sommet_tmp = _getSommet(_getSommet(getNumeroSommet(p_eOrigine)));
+  sommet_tmp->m_cout = 0;
+
+  for (int i = 0; i < m_nbSommets ; i++)
+    {
+      Graphe<Objet>::Arc	*arc_tmp;
+
+      arc_tmp = sommet_tmp->m_listDest;
+      while (arc_tmp)
+	{
+	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
+	    {
+	      arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
+	      arc_tmp->m_dest->m_predecesseur = sommet_tmp;
+	    }
+	  arc_tmp = arc_tmp->m_suivDest;
+	}
+      
+
+    }
+
   return -1;
 }
 
