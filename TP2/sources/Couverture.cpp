@@ -1,8 +1,9 @@
 //! \file Couverture.cpp
 //! \brief implémentation de l'interface pour une couverture aérienne
-//! \author theud1
-//! \version 0.1
-//! \date 2013-10-03
+//! \author Benjamin De Almeida - BEDEA1
+//! \version 1.0
+//! \date 06 novembre 2013
+
 #include <algorithm>
 #include <stdexcept>
 #include <string>
@@ -91,11 +92,18 @@ namespace tp2
       }
   }
   
+
+  //! \brief		Affiche les differentes ville du graphe
+  //! \pre		Il y a assez des villes dans le graphe
+  //! \post		Si les préconditions sont respectées, aucune ville ne sera affichées
   void			afficherVilles()
   {
     afficherVilles(m_graphe.listerSommets);
   }
   
+  //! \brief		Defini si le graphe est fortement connexe
+  //! \post renvoie true si le graphe est fortement connexe, sinon renvoie false
+  //! \param[out]	booleen true si le graphe est fortement connexe
   bool			villesAccessibles()
   {
     if (m_graphe.estFortementConnexe())
@@ -103,6 +111,11 @@ namespace tp2
     return (false);
   }
 
+  //! \brief		Defini si le graphe est fortement connexe
+  //! \pre Il y a assez de memoire pour placer les sommets dans 'sommets'
+  //! \post La liste de tous les sommets d'articulation sont retournes dans le vector 'sommets'
+  //! \post Le graphe original reste inchange
+  //! \param[out]	une liste des villes critiques
   std::vector<Ville>	villesCritiques()
   {
     std::vector<Ville> critiques;
@@ -110,6 +123,7 @@ namespace tp2
     m_graphe.getPointsArticulation(critiques);
     return (critiques);
   }
+
 
   std::vector<Ville>	determinerMinParcours(const Ville & p_origine,
 					      const Ville & p_destination, int & p_duree)
