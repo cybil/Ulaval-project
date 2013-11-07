@@ -603,7 +603,38 @@ void			Graphe<Objet>::_modifierCoutArc(int p_numOrigine,
 template<typename Objet>
 bool			Graphe<Objet>::estFortementConnexe() const
 {
-  return false;
+  Sommet *sommet_tmp;
+  std::stack<Sommet *> pile;
+
+  pile.push(m_listSommets);
+  //Utilisation de la pile pour un parcours en profondeur
+  while (!pile.empty())
+    {
+      Arc	*arc_tmp;
+
+      sommet_tmp = pile.top();
+      pile.pop();
+      sommet_tmp->m_etat(true);
+      arc_tmp = sommet_tmp->m_listeDest;
+      while (arc_tmp) // ajoute le nombre de sommets non parcourus
+	{
+	  if (arc_tmp->m_dest->m_etat == false)
+	    pile.push(arc_tmp->m_dest);
+	  arc_tmp = arc_tmp->m_suivDest;
+	}
+    }
+
+  //verification que tous les sommets ont ete parcourus
+  sommet_tmp = m_listSommets;
+  while (sommet_tmp)
+    {
+      if (sommet_tmp->m_etat == false)
+	return (false);
+      sommet_tmp->m_etat = false;
+      sommet_tmp->m_suivant;
+    }
+    
+  return true;
 }
 
 //! \brief Determine les composantes fortement connexes et les memorise dans un conteneur passe en parametre
@@ -614,7 +645,7 @@ bool			Graphe<Objet>::estFortementConnexe() const
 template<typename Objet>
 void			Graphe<Objet>::getComposantesFortementConnexes(std::vector<std::vector<Objet> > &p_composantes) const
 {
-
+  
 }
 
 //! \brief Trouve le plus court chemin entre deux point en utlisant l'algorithme de Bellman-Ford et le retourne

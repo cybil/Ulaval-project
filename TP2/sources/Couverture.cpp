@@ -124,17 +124,44 @@ namespace tp2
     return (critiques);
   }
 
-
+  //! \brief	Determine le chemin le plus court entre deux points
+  //! \pre Il y a assez de memoire pour placer les sommets dans 'sommets'
+  //! \post renvoi la liste des villes a parcourir
+  //! \post Le graphe original reste inchangé
+  //! \post p_duree = -1 si aucun chemin trouve
+  //! \param[in]	p_origine Ville d'origine
+  //! \param[in]	p_destination Ville de destination
+  //! \param[in]	p_duree duree de parcour
+  //! \param[out]	une liste des villes a parcourir
+  //! \exception bad_alloc Il n'y a pas assex de memoire pour placer le chemin dans 'chemin'
+  //! \exception logic_error Le sommet d'origine ou de destination n'existe pas
   std::vector<Ville>	determinerMinParcours(const Ville & p_origine,
 					      const Ville & p_destination, int & p_duree)
   {
-    
+    std::vector<Ville> chemin;
+
+    p_duree = m_graphe.dijkstra(p_origine, p_destination, chemin);
+    return (chemin);
   }
 
+  //! \brief	Utilise l'algorithme bellmanFord
+  //! \pre Il y a assez de memoire pour placer les sommets dans 'sommets'
+  //! \post renvoi la liste des villes a parcourir
+  //! \post Le graphe original reste inchangé
+  //! \post p_duree = -1 si aucun chemin trouve
+  //! \param[in]	p_origine Ville d'origine
+  //! \param[in]	p_destination Ville de destination
+  //! \param[in]	p_duree duree de parcour
+  //! \param[out]	une liste des villes a parcourir
+  //! \exception bad_alloc Il n'y a pas assex de memoire pour placer le chemin dans 'chemin'
+  //! \exception logic_error Le sommet d'origine ou de destination n'existe pas
   std::vector<Ville>	bellManFord(const Ville & p_origine,
 				    const Ville & p_destination, int & p_duree)
   {
-
+    std::vector<Ville> chemin;
+    
+    p_duree = m_graphe.bellmanFord(p_origine, p_destination, chemin);
+    return (chemin);    
   }
 
 }//namespace tp2
