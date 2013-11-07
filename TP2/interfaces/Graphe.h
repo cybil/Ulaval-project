@@ -33,6 +33,7 @@ private:
   {
   public:
 
+    Sommet();
     Sommet(int p_numero, const Objet &p_etiquette);
     Sommet(Sommet *p_source);
 

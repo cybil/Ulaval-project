@@ -17,7 +17,7 @@
 //! \post Le sommet est initialise avec les parametres indique
 template<typename Objet>
 Graphe<Objet>::Sommet::Sommet(int p_numero, const Objet &p_etiquette)
-  : m_numero(p_numero), m_etiquette(p_etiquette)
+  : m_numero(p_numero), m_etiquette(p_etiquette), m_listeDest(NULL), m_suivant(NULL)
 {
   std::cout << "Sommet created." << std::endl;
 }
@@ -46,7 +46,7 @@ Graphe<Objet>::Sommet::~Sommet()
 {
   std::cout << "Sommet destroyed." << std::endl;
   Graphe<Objet>::Arc		*arcTmp = m_listeDest;
-  Graphe<Objet>::Arc		aDetruire;
+  Graphe<Objet>::Arc		*aDetruire;
 
   while (arcTmp)
     {
@@ -54,6 +54,7 @@ Graphe<Objet>::Sommet::~Sommet()
       arcTmp = arcTmp->m_suivDest;
       delete aDetruire;
     }
+  delete arcTmp;
 }
 
 //! \brief Constructeur avec parametres
@@ -61,8 +62,8 @@ Graphe<Objet>::Sommet::~Sommet()
 //! \param[in] cout Le cout de l'arc
 //! \post Un arc est cree avec les parametres indiques
 template<typename Objet>
-Graphe<Objet>::Arc::Arc(Sommet *p_dest, int p_cout)
-  : m_dest(p_dest), m_cout(p_cout)
+Graphe<Objet>::Arc::Arc(Graphe<Objet>::Sommet *p_dest, int p_cout)
+  : m_dest(p_dest), m_cout(p_cout), m_suivDest(NULL)
 {
   std::cout << "Arc created." << std::endl;
 }
@@ -93,7 +94,7 @@ Graphe<Objet>::Graphe()
 //! \pre Il y a assez de memoire pour copier le graphe 'source'
 //! \exception bad_alloc Il n'y a pas assez de memoire pour copier le graphe 'source'
 template<typename Objet>
-Graphe<Objet>::Graphe(const Graphe &p_source)
+Graphe<Objet>::Graphe(const Graphe<Objet> &p_source)
   : m_nbSommets(p_source.m_nbSommets), m_listSommets(p_source.m_listSommets)
 {
   std::cout << "Graphe created." << std::endl;
@@ -114,6 +115,7 @@ Graphe<Objet>::~Graphe()
       tmp = tmp->m_suivant;
       delete aDetruire;
     }
+  delete tmp;
 }
 
 /**
@@ -152,15 +154,15 @@ template<typename Objet>
 void				Graphe<Objet>::ajouterSommet(int p_numero, const Objet &p_etiquette)
 {
   if (sommetExiste(p_numero) == true)
-    throw std::logic_error("logic_error");
-  Graphe<Objet>::Sommet		*nouveauSommet = new Sommet(p_numero, p_etiquette);
+    throw std::logic_error("logic_error - ajouter sommet");
+  Graphe<Objet>::Sommet		*nouveauSommet = new Graphe<Objet>::Sommet(p_numero, p_etiquette);
 
   if (m_nbSommets == 0)
     m_listSommets = nouveauSommet;
   else
     {
       Graphe<Objet>::Sommet	*tmp = m_listSommets;
-      while (tmp)
+      while (tmp && tmp->m_suivant != NULL)
 	tmp = tmp->m_suivant;
       tmp->m_suivant = nouveauSommet;
       nouveauSommet->m_precedent = tmp;
@@ -178,7 +180,7 @@ template<typename Objet>
 void				Graphe<Objet>::enleverSommet(int p_numero)
 {
   if (sommetExiste(p_numero) == false)
-    throw std::logic_error("logic_error");
+    throw std::logic_error("logic_error - enlever sommet");
   Graphe<Objet>::Sommet		*tmp = m_listSommets;
 
   while (tmp)
@@ -206,12 +208,12 @@ void				Graphe<Objet>::enleverSommet(int p_numero)
 //! \exception logic_error Un des deux sommets n'existe pas
 //! \exception logic_error Il y a deja un arc oriente entre ces deux sommets
 template<typename Objet>
-void				Graphe<Objet>::ajouterArc(int p_numOrigine, int p_numDestination,
-							  int p_cout)
+void				Graphe<Objet>::ajouterArc(int p_numOrigine, int p_numDestination, int p_cout)
 {
-  if (sommetExiste(p_numOrigine) == false || sommetExiste(p_numDestination) == false)
-    throw std::logic_error("logic_error");
-  Graphe<Objet>::Arc		nouvelArc = new Arc( p_numDestination, p_cout);
+  if (sommetExiste(p_numOrigine) == false
+      || sommetExiste(p_numDestination) == false)
+    throw std::logic_error("logic_error - ajouter arc 1");
+  Graphe<Objet>::Arc		*nouvelArc = new Graphe<Objet>::Arc(_getSommet(p_numDestination), p_cout);
   Graphe<Objet>::Sommet		*tmp = m_listSommets;
 
   while (tmp)
@@ -226,7 +228,7 @@ void				Graphe<Objet>::ajouterArc(int p_numOrigine, int p_numDestination,
 	      while (arcTmp)
 		{
 		  if (arcTmp->m_dest->m_numero == p_numDestination)
-		    throw std::logic_error("logic_error");
+		    throw std::logic_error("logic_error - ajouter arc 2");
 		  arcTmp = arcTmp->m_suivDest;
 		}
 	      arcTmp->m_suivDest = nouvelArc;
@@ -268,7 +270,6 @@ void				Graphe<Objet>::enleverArc(int p_numOrigine, int p_numDestination)
 	}
       tmp = tmp->m_suivant;
     }
-  throw std::logic_error("logic_error");
 }
 
 /**
@@ -360,10 +361,10 @@ bool				Graphe<Objet>::sommetExiste(int p_numero) const
 {
   Graphe<Objet>::Sommet		*tmp = m_listSommets;
 
-  while (tmp)
+  while (tmp != NULL)
     {
       if (tmp->m_numero == p_numero)
-	return true;
+	  return true;
       tmp = tmp->m_suivant;
     }
   return false;
@@ -565,26 +566,26 @@ int				Graphe<Objet>::getCoutArc(int p_numOrigine,
 template<typename Objet>
 std::ostream			&operator<<(std::ostream &p_out, const Graphe<Objet> &p_graphe)
 {
-  p_out << "Le graphe contient " << p_graphe.nbSommets << " sommet(s)" << std::endl;
-  typename Graphe<Objet>::Sommet* vertex = p_graphe.listSommets;
+  p_out << "Le graphe contient " << p_graphe.m_nbSommets << " sommet(s)" << std::endl;
+  typename Graphe<Objet>::Sommet* vertex = p_graphe.m_listSommets;
 
   while (vertex != NULL)
     {
-      p_out << "Sommet no " << vertex->numero << vertex->m_etiquette << std::endl;// << std::endl;
+      p_out << "Sommet no " << vertex->m_numero << vertex->m_etiquette << std::endl;// << std::endl;
       //Afficher les arcs.
-      typename Graphe<Objet>::Arc* arc = vertex->listeDest;
+      typename Graphe<Objet>::Arc* arc = vertex->m_listeDest;
       if (arc != NULL)
 	{
 	  p_out << "Ce sommet a des liens vers le(s) sommet(s) : ";
-	  while (arc->suivDest != NULL)
+	  while (arc->m_suivDest != NULL)
 	    {
-	      p_out << arc->dest->numero << "(" << arc->cout << "), ";
-	      arc = arc->suivDest;
+	      p_out << arc->m_dest->m_numero << "(" << arc->m_cout << "), ";
+	      arc = arc->m_suivDest;
 	    }
-	  p_out << arc->dest->numero << "(" << arc->cout << ")";
+	  p_out << arc->m_dest->m_numero << "(" << arc->m_cout << ")";
 	}
       p_out << std::endl;
-      vertex = vertex->suivant;
+      vertex = vertex->m_suivant;
     }
   return p_out;
 }
@@ -601,7 +602,9 @@ std::ostream			&operator<<(std::ostream &p_out, const Graphe<Objet> &p_graphe)
 template<typename Objet>
 Graphe<Objet>			Graphe<Objet>::fermetureGraphe() const
 {
-
+  Graphe<Objet>			graphe();
+  std::vector<std::vector<int> > matriceAdj;	
+  
 }
 
 //! \brief Determine si le graphe est fortement connexe ou non
