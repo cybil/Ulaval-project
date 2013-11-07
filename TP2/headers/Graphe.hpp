@@ -664,8 +664,8 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
 						   const Objet &p_eDestination,
 						   std::vector<Objet> &p_chemin)
 {
+  Graphe<Objet>::Sommet *dest_tmp = _getSommet(getNumeroSommet(p_eOrigine));
   Graphe<Objet>::Sommet *sommet_tmp = m_listSommets;
-  int distance = 0;
 
   while (sommet_tmp)
     {
@@ -673,28 +673,55 @@ int			Graphe<Objet>::bellmanFord(const Objet &p_eOrigine,
       sommet_tmp->m_predecesseur = NULL;
       sommet_tmp = sommet_tmp->m_suivant;
     }
-  sommet_tmp = _getSommet(_getSommet(getNumeroSommet(p_eOrigine)));
+  sommet_tmp = _getSommet(getNumeroSommet(p_eOrigine));
   sommet_tmp->m_cout = 0;
 
   for (int i = 0; i < m_nbSommets ; i++)
     {
-      Graphe<Objet>::Arc	*arc_tmp;
+      sommet_tmp = m_listSommets;
+      while (sommet_tmp)
+	{
+	  Graphe<Objet>::Arc	*arc_tmp;
+	  
+	  arc_tmp = sommet_tmp->m_listDest;
+	  while (arc_tmp)
+	    {
+	      if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
+		{
+		  arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
+		  arc_tmp->m_dest->m_predecesseur = sommet_tmp;
+		  
+		}
+	      arc_tmp = arc_tmp->m_suivDest;
+	    }
+	  sommet_tmp = sommet_tmp->m_suivant;
+	}
+    }
 
+  
+  while (sommet_tmp)
+    {
+      Graphe<Objet>::Arc	*arc_tmp;
+	  
       arc_tmp = sommet_tmp->m_listDest;
       while (arc_tmp)
 	{
 	  if (arc_tmp->m_dest->m_cout > arc_tmp->m_cout + sommet_tmp->m_cout)
-	    {
-	      arc_tmp->m_dest->m_cout = arc_tmp->m_cout + sommet_tmp->m_cout;
-	      arc_tmp->m_dest->m_predecesseur = sommet_tmp;
-	    }
+	    return (-1);
 	  arc_tmp = arc_tmp->m_suivDest;
 	}
-      
-
+      sommet_tmp = sommet_tmp->m_suivant;
     }
 
-  return -1;
+  sommet_tmp = _getSommet(getNumeroSommet(p_eDestination));
+  distance = sommet_tmp->m_cout;
+  while (sommet_tmp->m_cout != 0)
+    {
+      p_chemin.push_back(sommet_tmp);
+      sommet_tmp = sommet_tmp->m_predecesseur;
+    }
+    
+  return distance;
 }
 
 template<typename Objet>
