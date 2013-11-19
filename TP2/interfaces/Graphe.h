@@ -1,8 +1,8 @@
 //! \file	Graphe.h
 //! \brief	Définition de l'interface pour un graphe générique
-//! \author	abder, thierry
+//! \author	Cybil Bourely - CMBOU5 / Benjamin De Almeida - BEDEA1
 //! \version	2.0 graphe template
-//! \date	octobre 2013
+//! \date	novembre 2013
 
 #include <iostream>
 #include <fstream>		// Pour les fichiers

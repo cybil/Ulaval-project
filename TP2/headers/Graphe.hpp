@@ -1,8 +1,8 @@
 //! \file Graphe.hpp
 //! \brief Implémentation des méthodes définies dans Graphe.h
-//! \author theud1
+//! \author Cybil Bourely - CMBOU5 / Benjamin De Almeida - BEDEA1
 //! \version 0.1 graphe générique
-//! \date 2013-10-03
+//! \date 2013-11-07
 
 #include <iostream>
 #include <algorithm>
@@ -44,16 +44,6 @@ Graphe<Objet>::Sommet::Sommet(Graphe<Objet>::Sommet *p_source)
 template<typename Objet>
 Graphe<Objet>::Sommet::~Sommet()
 {
-  // Graphe<Objet>::Arc		*arcTmp = m_listeDest;
-  // Graphe<Objet>::Arc		*aDetruire;
-
-  // while (arcTmp)
-  //   {
-  //     aDetruire = arcTmp;
-  //     arcTmp = arcTmp->m_suivDest;
-  //     delete aDetruire;
-  //   }
-  // delete arcTmp;
 }
 
 //! \brief Constructeur avec parametres
@@ -369,12 +359,12 @@ Objet				Graphe<Objet>::getEtiquetteSommet(int p_numero) const
   return _getSommet(p_numero)->m_etiquette;
 }
 
-//! \brief Retourne l'ordre d'entree d'un sommet
+//! \brief Retourne l'ordre de sortie d'un sommet
 //! \pre Le sommet doit exister
 //! \post Le graphe reste inchange
 //! \exception logic_error Le sommet n'existe pas
 //! \param[in] numero Le numero du sommet
-//! \return L'ordre d'entree d'un sommet
+//! \return L'ordre de sortie d'un sommet
 template<typename Objet>
 int				Graphe<Objet>::ordreSortieSommet(int p_numero) const
 {

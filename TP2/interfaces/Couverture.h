@@ -1,8 +1,8 @@
 //! \file Couverture.h
 //! \brief interface de la classe couverture modélisant la couverture des villes déservies par la compagnie air-GLOIFT
-//! \author theud1
+//! \author Benjamin De Almeida - BEDEA1
 //! \version 0.1
-//! \date 2013-10-03
+//! \date 2013-11-07
 #ifndef COUVERTURE_H_
 #define COUVERTURE_H_
 #include <fstream>		// Pour les fichiers

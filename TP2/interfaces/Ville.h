@@ -1,8 +1,8 @@
 //! \file Ville.h
 //! \brief interface de la classe Ville modélisant des villes où sont situés des aéroports
-//! \author theud1
+//! \author Benjamin De Almeida - BEDEA1
 //! \version 0.1
-//! \date 2013-10-03
+//! \date 2013-11-07
 //! une ville est caractérisée par son nom et le code de son aéroport
 #ifndef VILLE_H_
 #define VILLE_H_
