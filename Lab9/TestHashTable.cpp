@@ -28,16 +28,17 @@ using namespace HashTable_Lab9;
 	*/
 class Hache
 {
- public:
-	 unsigned long operator() (const std::string& clef)
-   {
-     const unsigned long GRAND_PREMIER = 1000003;
-     unsigned long total = 0;
-     unsigned long premiers[] = {11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79};
-     for(unsigned int i = 0; i < clef.length(); i++)
-       total += premiers[i] * clef[i];
-     return total * GRAND_PREMIER;
-   }
+public:
+  unsigned long			operator()(const std::string &clef)
+  {
+    const unsigned long		GRAND_PREMIER = 1000003;
+    unsigned long		total = 0;
+    unsigned long		premiers[] = {11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79};
+    
+    for(unsigned int i = 0; i < clef.length(); i++)
+      total += premiers[i] * clef[i];
+    return total * GRAND_PREMIER;
+  }
 };
 
 //Un typedef pour raccourcir les écritures
@@ -50,51 +51,56 @@ typedef HashTable<string, double, Hache> Table_Hache;
  * Un main() testeur de la classe Graphe
  * \return 0 - Arrêt normal du programme.
  */
-int main()
+int				main()
 { 
 
-try{
-  Table_Hache employes;
- // Table_hache::Iterateur itr;
-  cout << "début" << endl;
-  employes.insert("Napoléon Bonaparte", 33.5);
-  cout << "Napoléon inséré" << endl;
-  employes.insert("Gengis Khan", 40); 
-  cout << "Gengis Khan inséré" << endl;
-  employes.insert("Alexandre le Grand", 30.1);
-  cout << "Alexandre le Grand inséré" << endl;
-  //l'instruction suivant doit générer une exception
-  //employes.insert("Napoléon Bonaparte", 33.5);
-  cout << "On a ";
+  try {
+    Table_Hache			employes;
+
+    // Table_hache::Iterateur itr;
+    cout << "début" << endl;
+    employes.insert("Napoléon Bonaparte", 33.5);
+    cout << "Napoléon inséré" << endl;
+    employes.insert("Gengis Khan", 40); 
+    cout << "Gengis Khan inséré" << endl;
+    employes.insert("Alexandre le Grand", 30.1);
+    cout << "Alexandre le Grand inséré" << endl;
+    //l'instruction suivant doit générer une exception
+    // employes.insert("Napoléon Bonaparte", 33.5);
+
+    employes.display();
+    cout << "On a ";
   
-  if(!employes.contains("Napoléon Bonaparte"))
-    cout << "pas trouvé Napoléon Bonaparte" << endl;
-  else
-    cout << "trouvé " << endl;
+    if (!employes.contains("Napoléon Bonaparte"))
+      cout << "pas trouvé Napoléon Bonaparte" << endl;
+    else
+      cout << "trouvé " << endl;
 
-  cout << "On a " ;
-  if(!employes.contains("Tartarin de Tarascon"))
-    cout << "pas trouvé Tartarin de Tarascon" << endl;
-  else
-    cout << "trouvé " << endl;
+    cout << "On a " ;
+    if (!employes.contains("Tartarin de Tarascon"))
+      cout << "pas trouvé Tartarin de Tarascon" << endl;
+    else
+      cout << "trouvé " << endl;
 
-  cout << "Enlever Gengis Khan" << endl;
-  employes.remove("Gengis Khan");
+    cout << "Enlever Gengis Khan" << endl;
+    employes.remove("Gengis Khan");
  
-  if(!employes.contains ("Gengis Khan"))
-    cout << "Pas de Gengis Khan" << endl;
-  else
-    cout << "Gengis Khan encore là!" << endl;
-  if(!employes.contains("Alexandre le Grand"))
-    cout << "Pas d'Alexandre le Grand!" << endl;
-  else
-    cout << "Alexandre le Grand trouvé" << endl;
+    if (!employes.contains ("Gengis Khan"))
+      cout << "Pas de Gengis Khan" << endl;
+    else
+      cout << "Gengis Khan encore là!" << endl;
+    if (!employes.contains("Alexandre le Grand"))
+      cout << "Pas d'Alexandre le Grand!" << endl;
+    else
+      cout << "Alexandre le Grand trouvé" << endl;
 
-}catch(exception & e)
-{
-	cout << "Erreur: " << e.what() << endl;
-	return 0;
-}
+    employes.display();
+
+  } catch(exception &e)
+    {
+      cout << "Erreur: " << e.what() << endl;
+      return 0;
+    }
 
   return 0;
 }

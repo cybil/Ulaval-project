@@ -59,9 +59,15 @@ namespace HashTable_Lab9
      *
      * \post VRAI est retourné si l'élément est présent, FAUX sinon
      */
-    bool			contains(const TypeClef &p_x) const;
+    bool			contains(const TypeClef &p_x);
 
-
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // =-=-=-=-=-=-=-=-=-=-=-= A SUPPRIMER =-=-=-=-=-=-=-=-=-=-=-=-
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    void		display() const;
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    // =-=-=-=-=-=-=-=-=-=-=-= A SUPPRIMER =-=-=-=-=-=-=-=-=-=-=-=-
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
     /**
      *  \brief Insertion d'une paire (clé, valeur) dans la table de dispersion
@@ -77,7 +83,7 @@ namespace HashTable_Lab9
      * \post La paire a été insérée dans la table
      * \exception logic_error si la clé est déjà dans la table
      */
-    void			insert(const TypeClef &p_x, const T &p_val );
+    void			insert(const TypeClef &p_x, const T &p_val);
 
     /**
      *  \brief Supprimer un élément de la table
@@ -121,14 +127,14 @@ namespace HashTable_Lab9
        *  \brief Constructeur avec argument pour initialiser les membres de la classe
        */
       HashEntry(const TypeClef &p_k, const T &p_e,  EntryType p_i = EMPTY )
-	: key(p_k), element(p_e),info(p_i) { }
+	: m_key(p_k), m_element(p_e), m_info(p_i) { }
     };
 
     std::vector<HashEntry>	m_tab; /*!<  la table de hachage*/
     unsigned int		m_currentSize;	/*!< le nombre d'éléments courant dans la table*/
     static const int		m_TAUX_MAX = 50;	/*!< 50%:taux de remplissage maximum dans la table,
-					  sinon, on double sa taille. L'attribut static est pour fixer le même taux
-					  pour n'importe quelle instance de la classe en cas de modification*/
+							  sinon, on double sa taille. L'attribut static est pour fixer le même taux
+							  pour n'importe quelle instance de la classe en cas de modification*/
 
     /**
      *  \brief Redimensionner la capacité de la table de dispersion - Méthode fournie
@@ -137,10 +143,12 @@ namespace HashTable_Lab9
      * le taux de remplissage atteint le maximum, cette méthode la taille
      * de la table de dispersion.
      */
-    void			rehash( );
+    void			rehash();
+
+    unsigned int		findPos(const TypeClef &p_x);
 
     FoncHachage			m_myhash; /*!<fonction de hachage, voir les paramètres "template" de la classe
-			  ainsi que comment le main() prépare la classe FoncHachage*/
+					    ainsi que comment le main() prépare la classe FoncHachage*/
   };
 }//Fin du namespace
 

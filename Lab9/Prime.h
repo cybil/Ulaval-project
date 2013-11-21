@@ -9,19 +9,19 @@
 #ifndef PRIME_H
 #define PRIME_H
 
-	/**
-	 *  \brief Cherche le prochain nombre premier après n 
-	 *
-	 * On assume que n est > 0
-	 */
-	int nextPrime (int n);
+/**
+ *  \brief Cherche le prochain nombre premier après n 
+ *
+ * On assume que n est > 0
+ */
+int		nextPrime(int n);
 
-	//
-	/**
-	 *  \brief Vérifie si n est premier  
-	 *
-	 * On assume que n est > 0
-	 */
-	bool isPrime (int n);
+//
+/**
+ *  \brief Vérifie si n est premier  
+ *
+ * On assume que n est > 0
+ */
+bool		isPrime (int n);
 
 #endif //PRIME_H
