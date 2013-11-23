@@ -1,5 +1,5 @@
 /**
- * \file HashTable.h
+ * \file HashTableD.h
  * \brief Classe définissant une table de hachage
  * \author Cybil Bourely - CMBOU5
  * \version 0.1
@@ -8,8 +8,8 @@
  * Résolution de collisions par adressage ouvert et sondage quadratique
  */
 
-#ifndef _HACHAGE_TABLE
-#define _HACHAGE_TABLE
+#ifndef _HACHAGE_TABLED
+#define _HACHAGE_TABLED
 
 #include <iostream>
 #include <stdexcept>
@@ -19,18 +19,18 @@
 namespace HashTable_Lab9
 {
   /**
-   * \class HashTable
+   * \class HashTableD
    *
    * \brief classe générique représentant une table de dispersion
    *
    *  La tables est implémentée dans un vector. La résolution des collisions
    *  se fait par redispersion quadratique tel que vu dans le cours.
    */
-  template<typename TypeClef, typename T, typename FoncHachage>
+  template<typename TypeClef, typename T, typename FoncHachage1, typename FoncHachage2>
   // TypeClef   : le type des clefs
   // T          : le type des éléments
   // FoncHachage: classe fonction de hachage (foncteur)
-  class HashTable
+  class HashTableD
   {
   public:
     /**
@@ -43,7 +43,7 @@ namespace HashTable_Lab9
      *
      * \post Une instance de la classe HashTable est initialisée
      */
-    HashTable(int p_size = 101);
+    HashTableD(int p_size = 101);
 
     /**
      *  \brief Vider la table de dispersion -  Méthode fournie
@@ -106,9 +106,9 @@ namespace HashTable_Lab9
     class HashEntry
     {
     public:
-      TypeClef			m_key;
-      T				m_element;
-      EntryType			m_info;
+      TypeClef			m_key;	/*!< la clé de hachage*/
+      T				m_element;		/*!< la valeur associée à la clé*/
+      EntryType			m_info; /*!< tag pour préciser l'état de l'enrée (vide, active ou supprimée) */
 
       /**
        *  \brief Constructeur par défaut qui ne fait rien
@@ -139,10 +139,11 @@ namespace HashTable_Lab9
     unsigned int		findPos(const TypeClef &p_x);
     int				power(int value, int p);
 
-    FoncHachage			m_myhash;
+    FoncHachage1			m_myhash1;
+    FoncHachage2			m_myhash2;
   };
 }
 
-#include "HashTable.hpp"
+#include "HashTableD.hpp"
 
 #endif

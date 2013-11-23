@@ -1,106 +1,171 @@
 /**
  * \file TestHashTable.cpp
  * \brief un main() pour tester la classe HashTable.
- * \author Abder
+ * \author Cybil Bourely - CMBOU5
  * \version 0.1
- * \date septembre 2011
+ * \date 22 novembre 2013
  */
 
 #include <iostream>
 #include <string>
+#include <ctime>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
 #include "HashTable.h"
+#include "HashTableD.h"
 
 using namespace std;
 using namespace HashTable_Lab9;
 
 /** 
-	* \class Hache
-	*
-	* \brief Classe pour définir un foncteur pour la fonction de hachage qui sera utilisée par la classe HashTable
-	*
-	* Un foncteur n'est rien d'autre qu'un objet dont la classe définit l'opérateur fonctionnel '()'. 
-	* Les foncteurs, très utilsés dans la STL, ont la particularité de pouvoir être utilisés exactement 
-	* comme des fonctions puisqu'il est possible de leur appliquer leur opérateur fonctionnel selon une 
-	* écriture similaire à un appel de fonction. Cependant, ils sont un peu plus puissants que de simples fonctions, 
-	* car ils permettent de transporter, en plus du code de l'opérateur fonctionnel, des paramètres additionnels dans 
-	* leurs données membres. Les foncteurs constituent donc une fonctionnalité extrêmement puissante qui peut être 
-	* très pratique en de nombreux endroits.
-	*/
-class Hache
+ * \class Hache
+ *
+ * \brief Classe pour definir un foncteur pour la fonction de hachage qui sera utilisee par la classe HashTable
+ *
+ * Un foncteur n'est rien d'autre qu'un objet dont la classe definit l'operateur fonctionnel '()'. 
+ * Les foncteurs, trÃ¨s utilses dans la STL, ont la particularite de pouvoir Ãªtre utilises exactement 
+ * comme des fonctions puisqu'il est possible de leur appliquer leur operateur fonctionnel selon une 
+ * ecriture similaire Ã  un appel de fonction. Cependant, ils sont un peu plus puissants que de simples fonctions, 
+ * car ils permettent de transporter, en plus du code de l'operateur fonctionnel, des paramÃ¨tres additionnels dans 
+ * leurs donnees membres. Les foncteurs constituent donc une fonctionnalite extrÃªmement puissante qui peut Ãªtre 
+ * trÃ¨s pratique en de nombreux endroits.
+ */
+class Hache1
 {
 public:
-  unsigned long			operator()(const std::string &clef)
+  unsigned long			operator()(const int clef)
   {
-    const unsigned long		GRAND_PREMIER = 1000003;
-    unsigned long		total = 0;
-    unsigned long		premiers[] = {11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79};
-    
-    for(unsigned int i = 0; i < clef.length(); i++)
-      total += premiers[i] * clef[i];
-    return total * GRAND_PREMIER;
+    return  clef;
   }
 };
 
-//Un typedef pour raccourcir les écritures
-typedef HashTable<string, double, Hache> Table_Hache;
+class Hache2
+{
+public:
+  unsigned long			operator()(const int clef)
+  {
+    return  (919 - clef % 919);
+  }
+};
+
+typedef HashTable<int, double, Hache1> Table_Hache1;		// utilise le sondage quadratique avec le foncteur Hache1
+typedef HashTableD<int, double, Hache1, Hache2> Table_Hache2;	// utilise le double hachage avec les foncteurs Hache1 et Hache2
+
+/**
+ * \brief Cherche si un vector contient un element donne
+ * \param[in] vec est le vector conteneur
+ * \param[in] k est l'element a chercher
+ * \return True si l'element est present, false sinon
+ */
+bool		contains(std::vector<int> &p_vec, int p_k)
+{
+  std::vector<int>::iterator	it = p_vec.begin();
+
+  while (it != p_vec.end())
+    {
+      if (*it == p_k)
+	return true;
+      ++it;
+    }
+  return false;
+}
+
+/**
+ * \brief Fonction de test du sondage quadratique
+ * \return le nombre de collision
+ */
+int				testQuadratique(int NB_ENTRY)
+{
+  Table_Hache1			employes(1013);
+  int				nbCollision = 0;
+  std::vector<int>		keys; // conteneur pour stocker les clefs generees
+  int				k = 0; // iterateur pour generer les clefs uniques
+
+  srand(time(NULL));
+  keys.push_back(0);
+  for (int i = 0; i < NB_ENTRY; i++)
+    {
+      while (contains(keys, k) == true)
+	k = (rand() % (19999 - 10000) + 10000) + 1;
+      keys.push_back(k);
+      employes.insert(k, i);
+    }
+
+  // Recherche des elements inseres (verification de la methode contains)
+  int		find = 0;
+  for (int i = 0; i < NB_ENTRY; i++)
+    {
+      std::cout << "Clef recherchee : " << keys[i] << std::endl;
+      if (employes.contains(keys[i]) == false)
+	std::cout << "ERREUR: Clef non trouvee." << std::endl;
+      else
+	{
+	  std::cout << "Clef trouvee." << std::endl;
+	  ++find;
+	}
+    }
+  if (find == NB_ENTRY - 1)
+    std::cout << "Toutes les clefs inseree ont ete trouvee." << std::endl;
+  return nbCollision;
+}
+
+
+/**
+ * \brief Fonction de test du double hachage
+ * \return le nombre de collision
+ */
+int				testDoubleHachage(int NB_ENTRY)
+{
+  Table_Hache2			hashTable(1013);
+  int				nbCollision = 0;
+  std::vector<int>		keys; // conteneur pour stocker les clefs generees
+  int				k = 0; // iterateur pour generer les clefs uniques
+
+  srand(time(NULL));
+  keys.push_back(0);
+  for (int i = 0; i < NB_ENTRY; i++)
+    {
+      while (contains(keys, k) == true)
+	k = (rand() % (19999 - 10000) + 10000) + 1;
+      keys.push_back(k);
+      hashTable.insert(k, i);
+    }
+
+  // Recherche des elements inseres (verification de la methode contains)
+  int		find = 0;
+  for (int i = 0; i < NB_ENTRY; i++)
+    {
+      std::cout << "Clef recherchee : " << keys[i] << std::endl;
+      if (hashTable.contains(keys[i]) == false)
+	std::cout << "ERREUR: Clef non trouvee." << std::endl;
+      else
+	{
+	  std::cout << "Clef trouvee." << std::endl;
+	  ++find;
+	}
+    }
+  if (find == NB_ENTRY - 1)
+    std::cout << "Toutes les clefs inseree ont ete trouvee." << std::endl;
+  return nbCollision;
+}
 
 /**
  * \fn int main (void)
  * \brief fonction principale.
  *
  * Un main() testeur de la classe Graphe
- * \return 0 - Arrêt normal du programme.
+ * \return 0 - ArrÃªt normal du programme.
  */
 int				main()
 { 
+  std::cout << "<<<== SONDAGE QUADRATIQUE ==>>>" << std::endl;
+  testQuadratique(500); // 500 = nombre d'entree a inserer
+  std::cout << "<<<== FIN SONDAGE QUADRATIQUE ==>>>" << std::endl;
 
-  try {
-    Table_Hache			employes;
-
-    // Table_hache::Iterateur itr;
-    cout << "début" << endl;
-    employes.insert("Napoléon Bonaparte", 33.5);
-    cout << "Napoléon inséré" << endl;
-    employes.insert("Gengis Khan", 40); 
-    cout << "Gengis Khan inséré" << endl;
-    employes.insert("Alexandre le Grand", 30.1);
-    cout << "Alexandre le Grand inséré" << endl;
-    //l'instruction suivant doit générer une exception
-    // employes.insert("Napoléon Bonaparte", 33.5);
-
-    employes.display();
-    cout << "On a ";
-  
-    if (!employes.contains("Napoléon Bonaparte"))
-      cout << "pas trouvé Napoléon Bonaparte" << endl;
-    else
-      cout << "trouvé " << endl;
-
-    cout << "On a " ;
-    if (!employes.contains("Tartarin de Tarascon"))
-      cout << "pas trouvé Tartarin de Tarascon" << endl;
-    else
-      cout << "trouvé " << endl;
-
-    cout << "Enlever Gengis Khan" << endl;
-    employes.remove("Gengis Khan");
- 
-    if (!employes.contains ("Gengis Khan"))
-      cout << "Pas de Gengis Khan" << endl;
-    else
-      cout << "Gengis Khan encore là!" << endl;
-    if (!employes.contains("Alexandre le Grand"))
-      cout << "Pas d'Alexandre le Grand!" << endl;
-    else
-      cout << "Alexandre le Grand trouvé" << endl;
-
-    employes.display();
-
-  } catch(exception &e)
-    {
-      cout << "Erreur: " << e.what() << endl;
-      return 0;
-    }
+  std::cout << "<<<== DOUBLE HACHAGE ==>>>" << std::endl;
+  testDoubleHachage(500); // 500 = nombre d'entree a inserer
+  std::cout << "<<<== FIN DOUBLE HACHAGE ==>>>" << std::endl;
 
   return 0;
 }

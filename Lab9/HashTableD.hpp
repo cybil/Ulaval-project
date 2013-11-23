@@ -1,5 +1,5 @@
 /**
- * \file HashTable.hpp
+ * \file HashTableD.hpp
  * \brief Implémentation de la classe HashTable
  * \author Cybil Bourely - CMBOU5
  * \version 0.1
@@ -17,8 +17,8 @@ namespace HashTable_Lab9
    *
    * \param[in] size La taille de la hash table
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  HashTable<TypeClef, T, FoncHachage>::HashTable(int p_size) 
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::HashTableD(int p_size) 
   : m_tab(nextPrime(p_size))
   { 
     m_nbCollision = 0;
@@ -26,10 +26,10 @@ namespace HashTable_Lab9
   }
 	    
   /**
-   * \fn void HashTable<TypeClef, T, FoncHachage>::makeEmpty( )
+   * \fn void HashTable<TypeClef, T, FoncHachage1, FoncHachage2>::makeEmpty( )
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  void HashTable<TypeClef, T, FoncHachage>::makeEmpty()
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  void HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::makeEmpty()
   {
     m_currentSize = 0;
     for (unsigned int i = 0; i < m_tab.size(); i++)
@@ -37,10 +37,10 @@ namespace HashTable_Lab9
   }
 
   /**
-   * \fn void HashTable<TypeClef, T, FoncHachage>::  rehash()
+   * \fn void HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::  rehash()
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  void		HashTable<TypeClef, T, FoncHachage>::rehash()
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  void		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::rehash()
   {
     std::vector<HashEntry> oldArray = m_tab;
 
@@ -62,11 +62,11 @@ namespace HashTable_Lab9
    *
    * \post VRAI est retourné si l'élément est présent, FAUX sinon
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  bool		HashTable<TypeClef, T, FoncHachage>::contains(const TypeClef &p_x)
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  bool		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::contains(const TypeClef &p_x)
   {
-    if (m_tab[m_myhash(p_x) % m_tab.size()].m_key == p_x
-    	&& m_tab[m_myhash(p_x) % m_tab.size()].m_info == ACTIVE)
+    if (m_tab[m_myhash1(p_x) % m_tab.size()].m_key == p_x
+    	&& m_tab[m_myhash1(p_x) % m_tab.size()].m_info == ACTIVE)
       return true;
     ++m_nbCollision;
     unsigned int	i = 0;
@@ -86,8 +86,8 @@ namespace HashTable_Lab9
    * \param[in] p est la puissance
    * \return value a la puissance p
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  int		HashTable<TypeClef, T, FoncHachage>::power(int value, int p)
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  int		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::power(int value, int p)
   {
     int		ret = value;
     
@@ -102,15 +102,15 @@ namespace HashTable_Lab9
    * \param[in] x est la clef de l'entree a inserer dans la table
    * \return La position de la place libre trouvee
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  unsigned int		HashTable<TypeClef, T, FoncHachage>::findPos(const TypeClef &p_x)
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  unsigned int		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::findPos(const TypeClef &p_x)
   {
-    unsigned int	pos = m_myhash(p_x) % m_tab.size();
+    unsigned int	pos = m_myhash1(p_x) % m_tab.size();
     unsigned int	i = 0;
 
     while (m_tab[pos].m_key != p_x)
       {
-	pos = (pos + (power(-1, i) * power(floor(i / 2), 2))) % m_tab.size();
+	pos = (pos + (m_myhash1(p_x) + i * m_myhash2(p_x))) % m_tab.size();
 	if (m_tab[pos].m_info != ACTIVE)
 	  return pos;
 	++i;
@@ -133,8 +133,8 @@ namespace HashTable_Lab9
    * \post La paire a été insérée dans la table
    * \exception logic_error si la clé est déjà dans la table
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  void		HashTable<TypeClef, T, FoncHachage>::insert(const TypeClef &p_x, const T &p_val)
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  void		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::insert(const TypeClef &p_x, const T &p_val)
   {
     if (contains(p_x) == true)
       throw std::logic_error("logic_error : la clef est deja dans la table.");
@@ -142,15 +142,16 @@ namespace HashTable_Lab9
     HashEntry  	newEntry(p_x, p_val);
     newEntry.m_info = ACTIVE;
     
-    if (m_tab[m_myhash(p_x) % m_tab.size()].m_info == ACTIVE)
+    if (m_tab[m_myhash1(p_x) % m_tab.size()].m_info == ACTIVE)
       m_tab[findPos(p_x)] = newEntry;
     else
-      m_tab[m_myhash(p_x) % m_tab.size()] = newEntry;
+      m_tab[m_myhash1(p_x) % m_tab.size()] = newEntry;
 
     ++m_currentSize;
     if (m_currentSize >= (m_tab.size() * m_TAUX_MAX / 100))
       rehash();
   }
+
 
   /**
    *  \brief Supprimer un élément de la table
@@ -159,8 +160,8 @@ namespace HashTable_Lab9
    * \post La table comprend un élément de moins
    * \exception logic_error si la clé n'est pas dans la table
    */
-  template<typename TypeClef, typename T, class FoncHachage>
-  void		HashTable<TypeClef, T, FoncHachage>::remove(const TypeClef &p_x)
+  template<typename TypeClef, typename T, class FoncHachage1, class FoncHachage2>
+  void		HashTableD<TypeClef, T, FoncHachage1, FoncHachage2>::remove(const TypeClef &p_x)
   {
     if (contains(p_x) == true)
       {
@@ -187,5 +188,5 @@ namespace HashTable_Lab9
   }
 
 
-}//Fin du namespace
+}
   
