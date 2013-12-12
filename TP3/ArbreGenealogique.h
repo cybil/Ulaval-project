@@ -46,7 +46,7 @@ public :
   //! \param[in] p_parent la reference du parent
   //! \pre Si l'arbre est vide p_parent == p_enfant
   //! \param[in] p_enfant la reference de l'enfant
-  void				ajouterEnfant(const Personne *p_parent,
+  void				ajouterEnfant(const Personne &p_parent,
 					      const Personne &p_enfant);
 
   //! \brief Trouve tous les enfants du parent

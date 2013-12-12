@@ -38,7 +38,7 @@ ArbreGenealogique::~ArbreGenealogique()
 //! \param[in] p_parent la reference du parent
 //! \pre Si l'arbre est vide p_parent == p_enfant
 //! \param[in] p_enfant la reference de l'enfant
-void				ArbreGenealogique::ajouterEnfant(const Personne *p_parent,
+void				ArbreGenealogique::ajouterEnfant(const Personne &p_parent,
 								 const Personne &p_enfant)
 {
   

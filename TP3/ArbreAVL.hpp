@@ -124,7 +124,7 @@ int				ArbreAVL<TypeCle, TypeValeur>::hauteur() const
 template<typename TypeCle, typename TypeValeur>
 bool				ArbreAVL<TypeCle, TypeValeur>::appartient(const TypeCle &p_cle) const
 {
-  return _appartient(m_racine, cle) != 0 ? true : false;
+  return (_auxAppartient(m_racine, p_cle) != 0) ? true : false;
 }
 
 //! \brief Retourner le parent d'un element
@@ -243,7 +243,7 @@ void				ArbreAVL<TypeCle, TypeValeur>::enlever(const TypeCle &p_cle)
 template<typename TypeCle, typename TypeValeur>
 int				ArbreAVL<TypeCle, TypeValeur>::_maximum(int p_premier, int p_second) const
 {
-  
+  return p_premier > p_second ? p_premier : p_second;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -285,7 +285,7 @@ template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud		        *ArbreAVL<TypeCle, TypeValeur>::_auxAppartient(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
 									       const TypeCle &p_cle) const
 {
-
+  
 }
 
 //! \param[in] p_cle la cle de l'element recherche
@@ -306,7 +306,39 @@ void				ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::N
 									const TypeCle &p_cle,
 									const TypeValeur &p_valeur)
 {
-
+  if (p_racine == 0)
+    {
+      p_racine = new Noeud(p_cle, p_valeur);
+      m_cardinalite++;
+      return;
+    }
+  if (p_racine->m_cle > p_cle)
+    {
+      _inserer(p_racine->m_gauche, p_cle, p_valeur);
+      if ((_hauteur(p_racine->m_gauche) - _hauteur(p_racine->m_droite)) == 2)
+	{
+	  if (p_racine->m_gauche->m_cle > p_cle)
+	    _zigZigGauche(p_racine);
+	  else 
+	    _zigZagGauche(p_racine);
+	}
+      else
+	p_racine->m_hauteur = 1 + _maximum(_hauteur(p_racine->m_gauche), _hauteur(p_racine->m_droite));
+    }
+  else
+    {
+      _inserer(p_racine->m_droite, p_cle, p_valeur);
+      if ((_hauteur(p_racine->m_droite) - _hauteur(p_racine->m_gauche)) == 2)
+	{
+	  if (p_racine->m_droite->m_cle > p_cle)
+	    _zigZigDroit(p_racine);
+	  else
+	    _zigZagDroit(p_racine);
+	}
+      else
+	p_racine->m_hauteur = 1 + _maximum(_hauteur(p_racine->m_droite),
+					   _hauteur(p_racine->m_gauche));
+    }
 }
 
 //! \param[in] p_cle la cle du noeud que l'on veut enlever
@@ -337,7 +369,16 @@ void				ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
+  Noeud				*tmp;
 
+  tmp = p_noeudCritique->m_gauche;
+  p_noeudCritique->m_gauche = tmp->m_droite;
+  tmp->m_droite = p_noeudCritique;
+  p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_gauche),
+					    _hauteur(p_noeudCritique->m_droite));
+  tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_gauche),
+				p_noeudCritique->m_hauteur);
+  p_noeudCritique = tmp;
 }
 
 //! \brief Cas de balancement zig zig droit
