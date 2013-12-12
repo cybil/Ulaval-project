@@ -1,3 +1,5 @@
+
+#include <string>
 #include <stdexcept>
 #include "ArbreGenealogique.h"
 
@@ -141,7 +143,7 @@ std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
   return p_os;
 }
 
-std::string		ArbreGenealogique::display()
+std::string		ArbreGenealogique::display() const
 {
  std::string 		str = "";
  
@@ -150,19 +152,19 @@ std::string		ArbreGenealogique::display()
  return str;
 }
 
-std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str)
+std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str) const
 {
   if (p_noeud == NULL)
-    return str;
-  str += p_noeud->m_personne->reqNom();
+    return p_str;
+  p_str += p_noeud->m_personne->reqNom();
   if (p_noeud->m_droite)
   {
-    str += ", ";
-    _display(p_noeud->m_droite, str);
+    p_str += ", ";
+    _display(p_noeud->m_droite, p_str);
   }
   if (p_noeud->m_gauche)
   {
-    str += "\n" + p_noeud->m_personne->reqNom() + " :\n";
-    _display(p_noeud->m_gauche, str)
+    p_str += "\n" + p_noeud->m_personne->reqNom() + " :\n";
+    _display(p_noeud->m_gauche, p_str);
   }
 }

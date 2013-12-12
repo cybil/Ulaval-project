@@ -299,16 +299,16 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::
 //! \return pointeur sur l'element recherche ou NULL s'il n'existe pas
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud		        *ArbreAVL<TypeCle, TypeValeur>::_auxAppartient(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
-									       const TypeCle &p_cle) const
+													       const TypeCle &p_cle) const
 {
-	if (p_racine == 0)
-		return 0;
-	if ( p_racine->m_cle == cle )
-		return p_racine;
-	if ( p_racine->m_cle > cle )
-		return _auxAppartient(p_racine->m_gauche, cle);
-	else
-		return _auxAppartient(p_racine->m_droite, cle);
+  if (p_racine == 0)
+    return 0;
+  if (p_racine->m_cle == p_cle)
+    return p_racine;
+  if (p_racine->m_cle > p_cle)
+    return _auxAppartient(p_racine->m_gauche, p_cle);
+  else
+    return _auxAppartient(p_racine->m_droite, p_cle);
 }
 
 //! \param[in] p_cle la cle de l'element recherche

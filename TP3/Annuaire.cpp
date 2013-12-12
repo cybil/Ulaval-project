@@ -30,7 +30,7 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
   std::string	rue;
   std::string	ville;
 
-  try {
+  // try {
     while (!p_fichierEntree.eof())
       {
 	if (separateur == false)
@@ -65,9 +65,9 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	    ajouterEnfant(personne1, personne2);
 	  }
       }
-  } catch (std::exception e) {
-    std::cerr << "Annuaire: Invalid file" << std::endl;
-  }
+  // } catch (std::exception e) {
+  //   std::cerr << "Annuaire: Invalid file" << std::endl;
+  // }
 }
 
 Annuaire::~Annuaire()

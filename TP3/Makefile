@@ -1,5 +1,6 @@
 
-CXXFLAGS += -Wall -Wextra -g3
+# CXXFLAGS += -Wall -Wextra
+CXXFLAGS += -g3
 
 CXX =		g++
 
