@@ -95,6 +95,10 @@ private:
 
   void				_creerVecteurEnfant(Noeud *p_enfant,
     					            std::vector<Personne *> p_tab_personne) const;
+
+
+std::string	_display(Noeud *p_noeud, std::string &p_str);
+std::string		display();
   // Attributs prives
 
   Noeud				*m_racine;
