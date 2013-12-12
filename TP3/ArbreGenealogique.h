@@ -19,6 +19,7 @@ public :
     //! \post un noeud typique est initialise
     Noeud(const Personne &p_personne);
 
+    ~Noeud();
     //! \brief La donnee dans l'arbre
     Personne		*m_personne;
 

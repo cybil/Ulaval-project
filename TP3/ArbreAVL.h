@@ -19,6 +19,7 @@ public :
     //! \post un noeud typique est initialise
     Noeud(const TypeCle &p_cle, const TypeValeur &p_valeur);
 
+    ~Noeud();
     //! \brief La cle du noeud
     TypeCle		m_cle;
 

@@ -3,7 +3,6 @@
 
 Annuaire::Annuaire()
 {
-
 }
 
 //! \brief Constructeur a partir d'un fichier en entree
@@ -16,7 +15,7 @@ Annuaire::Annuaire()
 //! \exception logic_error si p_fichierEntree n'est pas ouvert correctement
 Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 {
-
+  
 }
 
 Annuaire::~Annuaire()

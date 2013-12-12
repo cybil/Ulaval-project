@@ -1,11 +1,30 @@
 
 #include "ArbreGenealogique.h"
 
+//******************
+// Constructeur / Destructeur Noeud
+//*******************
+
+ArbreGenealogique::Noeud::Noeud(const Personne& p_personne)
+  : m_gauche(NULL), m_droite(NULL), m_hauteur(0) 
+{
+  m_personne = new Personne(p_personne);
+}
+
+ArbreGenealogique::Noeud::~Noeud()
+{
+}
+
+//******************
+// Constructeur / Destructeur ArbreGenealogique
+//*******************
+
 //! \brief Constructeur par parametre 
 //! \param[in] p_personne la personne de la racine de l'arbre
 ArbreGenealogique::ArbreGenealogique(const Personne &p_personne)
 {
-
+  m_nom = p_personne.reqNom();
+  m_racine = new ArbreGenealogique::Noeud(p_personne);
 }
 
 //! \brief Destructeur par defaut
@@ -22,7 +41,7 @@ ArbreGenealogique::~ArbreGenealogique()
 void				ArbreGenealogique::ajouterEnfant(const Personne *p_parent,
 								 const Personne &p_enfant)
 {
-
+  
 }
 
 //! \brief Trouve tous les enfants du parent
@@ -49,6 +68,7 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 {
-
+  p_os << "ArbreGenealogique : ";
+  return p_os;
 }
 
