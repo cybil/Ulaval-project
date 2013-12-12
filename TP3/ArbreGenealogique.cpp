@@ -73,6 +73,7 @@ void				ArbreGenealogique::_ajouterEnfant(Noeud *p_noeud_fils,
 void				ArbreGenealogique::trouvePersonne(const Personne &p_personne,
 						 Noeud *&p_trouve) const
 {
+  p_trouve = NULL;
   _trouvePersonne(m_racine, p_personne, p_trouve);    
 }
 

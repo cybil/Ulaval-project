@@ -114,7 +114,9 @@ long				ArbreAVL<TypeCle, TypeValeur>::taille() const
 template<typename TypeCle, typename TypeValeur>
 int				ArbreAVL<TypeCle, TypeValeur>::hauteur() const
 {
-  
+  if (estVide() == true)
+    throw std::logic_error("Hauteur: l'arbre est vide");
+  return m_racine->m_hauteur;
 }
 
 //! \brief Verifier si un element est dans l'arbre
@@ -346,7 +348,40 @@ void				ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::N
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_enlever(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine)
 {
+  if (p_racine->m_cle > p_cle)
+    _enlever(p_cle, p_racine->m_gauche);
+  else if (p_racine->m_cle < p_cle)
+    _enlever(p_cle, p_racine->m_droite);
+  else if (p_racine->m_gauche != NULL && p_racine->m_droite != NULL)
+    {
+      Noeud	       *tmp = p_racine->m_droite;
+      while (tmp->m_gauche != NULL)
+	tmp = tmp->m_gauche;
+      p_racine->m_cle = tmp->m_cle;
+      _auxRetireMin(p_racine->m_droite);
+    }
+  else
+    {
+      Noeud		*vieuxNoeud = p_racine;
+      p_racine = (p_racine->m_gauche != NULL) ? p_racine->m_gauche : p_racine->m_droite;
+      delete vieuxNoeud;
+    }
+  _balancer(p_racine);
+}
 
+template<typename TypeCle, typename TypeValeur>
+void		ArbreAVL<TypeCle, TypeValeur>::_auxRetireMin(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud)
+{
+  if (p_noeud == NULL)
+    throw std::logic_error("RetireMin: pointeur NULL");
+  else if (p_noeud->m_gauche != NULL)
+    _auxRetireMin(p_noeud->m_gauche);
+  else
+    {
+      Noeud		*tmp = p_noeud;
+      p_noeud = p_noeud->m_droite;
+      delete tmp;
+    }
 }
 
 //! \param[in] p_racine la noeud dont on veut faire un rebalancement si necessaire
@@ -402,7 +437,7 @@ void				ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeu
 template<typename TypeCle, typename TypeValeur>
 int				ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
-
+  
 }
 
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent
