@@ -6,6 +6,7 @@
 //! \date 13/12/2013
 
 #include "Personne.h"
+#include <cstring>
 
 //! \brief     Constructeur de la classe Personne
 //! \param[in] p_nom nom de la personne a ajouter
@@ -41,14 +42,16 @@ std::string Personne::reqPrenom(void) const { return m_prenom; }
 //! \param[in] p_personne une instance de la classe Personne
 //! \return    un booleen : true si this < p_personne
 bool Personne::operator<(Personne const & p_personne) const {
-	return m_nom < p_personne.m_nom;
+	int c = strcmp(m_nom, p_personne.m_nom);
+	return c ? c < 0 : strcmp(m_prenom, p_personne.m_prenom);
 }
 
 //! \brief     Surcharge de l'operateur superieur
 //! \param[in] p_personne une instance de la classe Personne
 //! \return    un booleen : true si this > p_personne
 bool Personne::operator>(Personne const & p_personne) const {
-	return m_nom > p_personne.m_nom;
+	int c = strcmp(m_nom, p_personne.m_nom);
+	return c ? c > 0 : strcmp(m_prenom, p_personne.m_prenom);
 }
 
 //! \brief     Surcharge de l'operateur inferieur ou egal

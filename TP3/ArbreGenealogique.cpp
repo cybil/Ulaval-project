@@ -1,4 +1,4 @@
-
+#include <stdexcept>
 #include "ArbreGenealogique.h"
 
 //******************
@@ -97,7 +97,21 @@ void				ArbreGenealogique::_trouvePersonne(Noeud *p_racine,
 //! \return un vector contenant tous les enfants
 std::vector<Personne *>		ArbreGenealogique::enfantsDe(const Personne &p_parent) const
 {
+  Noeud *tmp_noeud = NULL;
+  std::vector<Personne *> tab_personne;
+  trouvePersonne(p_parent, tmp_noeud);
+  if (tmp_noeud == NULL)
+    return tab_personne;
+  _creerVecteurEnfant(tmp_noeud->m_gauche, tab_personne);  
+}
 
+void				ArbreGenealogique::_creerVecteurEnfant(Noeud *p_enfant,
+						       std::vector<Personne *> p_tab_personne) const
+{
+  if (p_enfant == NULL)
+    return;
+  p_tab_personne.push_back(p_enfant->m_personne);
+  _creerVecteurEnfant(p_enfant->m_droite, p_tab_personne);
 }
 
 //! \brief Permet de savoir si une personne est dans l'arbre
@@ -107,7 +121,14 @@ std::vector<Personne *>		ArbreGenealogique::enfantsDe(const Personne &p_parent) 
 //! \exception logic_error si l'arbre est vide
 bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 {
+  if (m_racine == NULL)
+    throw std::logic_error("Erreur: Arbre vide dans methode appartient");
+  Noeud *tmp_personne;
 
+  trouvePersonne(p_personne, tmp_personne); 
+  if (tmp_personne == NULL)
+    return false;
+  return true;
 }
 
 //! \brief Surcharge de l'operateur <<

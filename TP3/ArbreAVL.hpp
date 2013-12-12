@@ -251,13 +251,27 @@ int				ArbreAVL<TypeCle, TypeValeur>::_maximum(int p_premier, int p_second) cons
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_max(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
-
+	if (m_cardinalite == 0)
+	throw std::logic_error("max: l'arbre est vide!\n");
+	if (p_racine->m_droite == 0)
+		return p_racine;
+	Noeud * temp = p_racine->m_droite;
+	while (temp->m_droite != 0)
+		temp = temp->m_droite;
+	return temp;
 }
 
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_min(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
-
+	if (m_cardinalite == 0)
+		throw std::logic_error("max: l'arbre est vide!\n");
+		if (p_racine->m_gauche == 0)
+			return p_racine;
+		Noeud * temp = p_racine->m_gauche;
+		while (temp->m_gauche != 0)
+			temp = temp->m_gauche;
+		return temp;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -287,7 +301,14 @@ template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud		        *ArbreAVL<TypeCle, TypeValeur>::_auxAppartient(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
 									       const TypeCle &p_cle) const
 {
-  
+	if (p_racine == 0)
+		return 0;
+	if ( p_racine->m_cle == cle )
+		return p_racine;
+	if ( p_racine->m_cle > cle )
+		return _auxAppartient(p_racine->m_gauche, cle);
+	else
+		return _auxAppartient(p_racine->m_droite, cle);
 }
 
 //! \param[in] p_cle la cle de l'element recherche
@@ -396,7 +417,8 @@ void				ArbreAVL<TypeCle, TypeValeur>::_balancer(ArbreAVL<TypeCle, TypeValeur>::
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-
+	_zigZigGauche(p_noeudCritique->m_droite);
+	_zigZigDroit(p_noeudCritique);
 }
 
 //! \brief Cas de balancement zig zag gauche
@@ -404,16 +426,8 @@ void				ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-  Noeud				*tmp;
-
-  tmp = p_noeudCritique->m_gauche;
-  p_noeudCritique->m_gauche = tmp->m_droite;
-  tmp->m_droite = p_noeudCritique;
-  p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_gauche),
-					    _hauteur(p_noeudCritique->m_droite));
-  tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_gauche),
-				p_noeudCritique->m_hauteur);
-  p_noeudCritique = tmp;
+	_zigZigDroit(p_noeudCritique->m_gauche);
+	_zigZigGauche(p_noeudCritique);
 }
 
 //! \brief Cas de balancement zig zig droit
@@ -421,7 +435,14 @@ void				ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeu
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_zigZigDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
+	Noeud *tmp;
 
+	tmp = p_noeudCritique->m_droite;
+	p_noeudCritique->m_droite = tmp->m_gauche;
+	tmp->m_gauche = p_noeudCritique;
+	p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_droite), _hauteur(p_noeudCritique->m_gauche));
+	tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_droite), p_noeudCritique->m_hauteur);
+	p_noeudCritique = tmp;
 }
 
 //! \brief Cas de balancement zig zig gauche
@@ -429,7 +450,14 @@ void				ArbreAVL<TypeCle, TypeValeur>::_zigZigDroit(ArbreAVL<TypeCle, TypeValeur
 template<typename TypeCle, typename TypeValeur>
 void				ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
+	Noeud				*tmp;
 
+  tmp = p_noeudCritique->m_gauche;
+  p_noeudCritique->m_gauche = tmp->m_droite;
+  tmp->m_droite = p_noeudCritique;
+  p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_gauche),_hauteur(p_noeudCritique->m_droite));
+  tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_gauche),p_noeudCritique->m_hauteur);
+  p_noeudCritique = tmp;
 }
 
 //! \param[in] p_noeud le noeud dont on desire obtenir la hauteur
@@ -485,7 +513,9 @@ void				ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeV
 template<typename TypeCle, typename TypeValeur>
 int				ArbreAVL<TypeCle, TypeValeur>::_hauteurParcours(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine) const
 {
-
+	if (p_racine == 0)
+	return -1;
+	return 1 + _maximum(_hauteur(p_racine->m_gauche), _hauteur(p_racine->m_droite));
 }
 
 //! \param[in] p_racine la racine de l'arbre parcouru
