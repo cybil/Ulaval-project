@@ -137,7 +137,32 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 {
-  p_os << "ArbreGenealogique : ";
+  p_os << p_arbreG.display() << std::endl;
   return p_os;
 }
 
+std::string		ArbreGenealogique::display()
+{
+ std::string 		str = "";
+ 
+ _display(m_racine, str);
+
+ return str;
+}
+
+std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str)
+{
+  if (p_noeud == NULL)
+    return str;
+  str += p_noeud->m_personne->reqNom();
+  if (p_noeud->m_droite)
+  {
+    str += ", ";
+    _display(p_noeud->m_droite, str);
+  }
+  if (p_noeud->m_gauche)
+  {
+    str += "\n" + p_noeud->m_personne->reqNom() + " :\n";
+    _display(p_noeud->m_gauche, str)
+  }
+}
