@@ -8,7 +8,7 @@
 ArbreGenealogique::Noeud::Noeud(const Personne& p_personne)
   : m_gauche(NULL), m_droite(NULL), m_hauteur(0) 
 {
-  m_personne = new Personne(p_personne);
+  m_personne = const_cast<Personne*>(&p_personne);
 }
 
 ArbreGenealogique::Noeud::~Noeud()

@@ -6,7 +6,8 @@ NAME =		tp3
 SRC	=	Personne.cpp \
 		Annuaire.cpp \
 		Adresse.cpp \
-		ArbreGenealogique.cpp
+		ArbreGenealogique.cpp\
+		main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 

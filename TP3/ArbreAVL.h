@@ -85,4 +85,7 @@ private :
 
 };
 
+
+#include "ArbreAVL.hpp"
+
 #endif		// !ARBREAVL_H__
