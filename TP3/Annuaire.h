@@ -5,7 +5,7 @@
 #include <list>
 #include <ostream>
 #include "Adresse.h"
-#include "ArbreAVL.hpp"
+#include "ArbreAVL.h"
 #include "ArbreGenealogique.h"
 
 class Annuaire
