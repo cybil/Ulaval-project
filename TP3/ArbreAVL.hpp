@@ -240,34 +240,40 @@ void				ArbreAVL<TypeCle, TypeValeur>::enlever(const TypeCle &p_cle)
 //! \param[in] p_premier le premier nombre a comparer
 //! \param[in] p_second le second nombre a comparer
 //! \return le plus grand des deux nombres
-int				_maximum(int p_premier, int p_second) const
+template<typename TypeCle, typename TypeValeur>
+int				ArbreAVL<TypeCle, TypeValeur>::_maximum(int p_premier, int p_second) const
 {
   
 }
 
-Noeud				*_max(Noeud *p_racine)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_max(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
 
 }
 
-Noeud				*_min(Noeud *p_racine)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_min(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
 
 }
 
-Noeud				*_copier(Noeud *p_noeud)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_copier(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_noeud)
 {
 
 }
 
 //! \brief Detruit un arbre
 //! \param[in] p_racine le noeud a partir duquel on veut demarrer la destruction
-void				_detruire(Noeud *p_racine)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_detruire(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
 
 }
   
-Noeud				*_trouver(const TypeCle &p_cle, Noeud *&p_noeud)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_trouver(const TypeCle &p_cle, Noeud *&p_noeud)
 {
 
 }
@@ -275,7 +281,9 @@ Noeud				*_trouver(const TypeCle &p_cle, Noeud *&p_noeud)
 //! \param[in] p_racine la racine de l'arbre ou chercher
 //! \param[in] p_cle la cle de l'element recherche
 //! \return pointeur sur l'element recherche ou NULL s'il n'existe pas
-Noeud			        *_auxAppartient(Noeud *p_racine, const TypeCle &p_cle) const
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud		        *ArbreAVL<TypeCle, TypeValeur>::_auxAppartient(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
+									       const TypeCle &p_cle) const
 {
 
 }
@@ -283,7 +291,9 @@ Noeud			        *_auxAppartient(Noeud *p_racine, const TypeCle &p_cle) const
 //! \param[in] p_cle la cle de l'element recherche
 //! \param[in] p_racine racine de l'arbre dans lequel on recherche
 //! \return la valeur de l'element recherche
-TypeValeur			_valeur(const TypeCle &p_cle, Noeud *&p_racine) const
+template<typename TypeCle, typename TypeValeur>
+TypeValeur			ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle,
+								       ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine) const
 {
 
 }
@@ -291,56 +301,65 @@ TypeValeur			_valeur(const TypeCle &p_cle, Noeud *&p_racine) const
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
 //! \param[in] p_cle la cle de l'element a inserer
 //! \param[in] p_valeur la valeur de l'element a inserer
-void				_inserer(Noeud *&p_racine, const TypeCle &p_cle,
-					 const TypeValeur &p_valeur)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine,
+									const TypeCle &p_cle,
+									const TypeValeur &p_valeur)
 {
 
 }
 
 //! \param[in] p_cle la cle du noeud que l'on veut enlever
 //! \param[in] p_racine la racine de l'arbre ou enlever l'element
-void				_enlever(const TypeCle &p_cle, Noeud *&p_racine)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_enlever(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine)
 {
 
 }
 
 //! \param[in] p_racine la noeud dont on veut faire un rebalancement si necessaire
-void				_balancer(Noeud *&p_racine)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_balancer(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine)
 {
 
 }
 
 //! \brief Cas de balancement zig zag droit
 //! \param[in] p_noeudCritique le noeud qu'il faut deplacer
-void				_zigZagDroit(Noeud *&p_noeudCritique);
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
 
 }
 
 //! \brief Cas de balancement zig zag gauche
 //! \param[in] p_noeudCritique le noeud qu'il faut deplacer
-void				_zigZagGauche(Noeud *&p_noeudCritique)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
 
 }
 
 //! \brief Cas de balancement zig zig droit
 //! \param[in] p_noeudCritique le noeud qu'il faut deplacer
-void				_zigZigDroit(Noeud *&p_noeudCritique)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_zigZigDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
 
 }
 
 //! \brief Cas de balancement zig zig gauche
 //! \param[in] p_noeudCritique le noeud qu'il faut deplacer
-void				_zigZigGauche(Noeud *&p_noeudCritique)
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
 
 }
 
 //! \param[in] p_noeud le noeud dont on desire obtenir la hauteur
 //! \return la hauteur du noeud passe en parametre
-int				_hauteur(Noeud *&p_noeud) const
+template<typename TypeCle, typename TypeValeur>
+int				ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
 
 }
@@ -348,7 +367,9 @@ int				_hauteur(Noeud *&p_noeud) const
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent
 //! \param[in] p_racine la racine de l'arbre dasns lequel on cherche
 //! \return le noeud parent de l'element dont la cle est en parametre
-Noeud				*_parent(const TypeCle &p_cle, Noeud *p_racine)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_parent(const TypeCle &p_cle,
+												ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
 
 }
@@ -356,7 +377,9 @@ Noeud				*_parent(const TypeCle &p_cle, Noeud *p_racine)
 //! \param[in] p_racine racine de l'arbre ou on cherche
 //! \param[in] p_sArb element dont on cherche le parent
 //! \return le noeud parent de l'element
-Noeud				*_successeurParent(Noeud *p_racine, Noeud *sArb)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_successeurParent(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
+													  ArbreAVL<TypeCle, TypeValeur>::Noeud *sArb)
 {
 
 }
@@ -364,7 +387,9 @@ Noeud				*_successeurParent(Noeud *p_racine, Noeud *sArb)
 //! \param[in] p_racine la racine de l'arbre ou l'on cherche le successeur
 //! \param[in] p_cle la cle de l'element dont on cherche le successeur
 //! \return le noeud parent de l'element
-Noeud				*_successeur(Noeud *p_racine, const TypeCle &p_cle)
+template<typename TypeCle, typename TypeValeur>
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_successeur(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
+												    const TypeCle &p_cle)
 {
 
 }
@@ -372,25 +397,26 @@ Noeud				*_successeur(Noeud *p_racine, const TypeCle &p_cle)
 //! \brief Parcours de l'arbre de facon symetrique
 //! \param[in] p_racine la racine de l'arbre
 //! \param[out] le vector ou l'on stocke les couples de Cle, Valeur en ordre
-void				_visiteSymetrique(Noeud *p_racine, std::vector<
-						    std::pair<TypeCle,
-							      TypeValeur> > &p_vecteur) const
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
+										 std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
 
 }
 
 //! \param[in] p_racine la racine de l'arbre dont on veut la hauteur
 //! \return la hauteur de l'arbre dont la racine est passee en parametre
-int				_hauteurParcours(Noeud *p_racine) const
+template<typename TypeCle, typename TypeValeur>
+int				ArbreAVL<TypeCle, TypeValeur>::_hauteurParcours(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine) const
 {
 
 }
 
 //! \param[in] p_racine la racine de l'arbre parcouru
 //! \param[out] structure ou stocker les elements parcourus 
-void				_auxPreOrdre(Noeud *p_racine, std::vector<
-					       std::pair<TypeCle,
-							 TypeValeur> > &p_vecteur) const
+template<typename TypeCle, typename TypeValeur>
+void				ArbreAVL<TypeCle, TypeValeur>::_auxPreOrdre(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
+									    std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
 
 }
