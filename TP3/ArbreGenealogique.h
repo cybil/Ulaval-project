@@ -91,6 +91,8 @@ private:
   void				_postOrdre(Noeud *p_Ncourant,
 					   std::vector<Personne *> &p_vPersonnes) const;
 
+  void				_ajouterEnfant(Noeud *noeud_fils, const Personne &p_enfant);
+
   // Attributs prives
 
   Noeud				*m_racine;

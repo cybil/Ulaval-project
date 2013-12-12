@@ -41,7 +41,54 @@ ArbreGenealogique::~ArbreGenealogique()
 void				ArbreGenealogique::ajouterEnfant(const Personne &p_parent,
 								 const Personne &p_enfant)
 {
+  if (m_racine == NULL)
+  {
+    m_racine = new Noeud(p_enfant);
+    return;
+  }
+
+  Noeud *ptr_noeud;
+
+  trouvePersonne(p_parent, ptr_noeud);
+  if (ptr_noeud == NULL)
+    return;
   
+  if (ptr_noeud->m_gauche == NULL)
+    ptr_noeud->m_gauche = new Noeud(p_enfant);
+  else
+  _ajouterEnfant(ptr_noeud->m_gauche, p_enfant);
+}
+
+void				ArbreGenealogique::_ajouterEnfant(Noeud *p_noeud_fils,
+    								  const Personne &p_enfant)
+{
+  if (p_noeud_fils->m_droite == NULL) 
+  {
+    p_noeud_fils->m_droite = new Noeud(p_enfant);
+    return;
+  }
+  _ajouterEnfant(p_noeud_fils->m_droite, p_enfant);
+}
+
+void				ArbreGenealogique::trouvePersonne(const Personne &p_personne,
+						 Noeud *&p_trouve) const
+{
+  _trouvePersonne(m_racine, p_personne, p_trouve);    
+}
+
+void				ArbreGenealogique::_trouvePersonne(Noeud *p_racine, 
+    						 const Personne &p_personne,
+						 Noeud *&p_trouve) const
+{
+  if (p_trouve)
+    return;
+  if (p_personne == *(p_racine->m_personne)) 
+  {
+    p_trouve = p_racine;
+    return;
+  }
+  _trouvePersonne(p_racine->m_gauche, p_personne, p_trouve);
+  _trouvePersonne(p_racine->m_droite, p_personne, p_trouve);
 }
 
 //! \brief Trouve tous les enfants du parent
