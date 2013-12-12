@@ -65,7 +65,7 @@ public :
   //! \param[out] p_os le flux de sortie contenant l'arbre formatee
   //! \return un flux de sortie pour les appels en cascade
 
-  // friend std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG) const; 
+  friend std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG);
 
 private:
 

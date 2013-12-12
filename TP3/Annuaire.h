@@ -48,7 +48,7 @@ public:
   //! \param[out] p_os le flux de sortie contenant l'annuaire
   //! \return un flux de sortie pour les appels en cascade
 
-// friend std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire) const;
+  friend std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire);
 
 private:
 
