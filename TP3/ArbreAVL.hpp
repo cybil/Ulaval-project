@@ -394,7 +394,6 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(
 	if (node == 0)
 	{
 		node = new Noeud(key, value);
-		node->m_hauteur++;
 		m_cardinalite++;
 		return;
 	}
