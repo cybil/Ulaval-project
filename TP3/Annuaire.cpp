@@ -30,7 +30,7 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
   std::string	rue;
   std::string	ville;
 
-  // try {
+  try {
     while (!p_fichierEntree.eof())
       {
 	if (separateur == false)
@@ -55,19 +55,34 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	    getline(p_fichierEntree, nom);
 	    getline(p_fichierEntree, prenom);
 	    getline(p_fichierEntree, date);
+
+	    if (nom == "" || prenom == "" || date == "") {	
+  std::cout << std::endl << std::endl << "fin" << std::endl;
+      return;
+	    }
 	    Personne	personne1(nom, prenom, atoi(date.c_str()));
 	  
 	    getline(p_fichierEntree, nom);
 	    getline(p_fichierEntree, prenom);
 	    getline(p_fichierEntree, date);
 	    Personne	personne2(nom, prenom, atoi(date.c_str()));
-
+	    std::cout << "nom : " << personne1.reqNom() << " " << personne1.reqPrenom()  << std::endl;
+	    std::cout << "nom : " << personne2.reqNom() << " " << personne2.reqPrenom() <<  std::endl;
 	    ajouterEnfant(personne1, personne2);
 	  }
+	std::cout << " --- " << std::endl;
       }
-  // } catch (std::exception e) {
-  //   std::cerr << "Annuaire: Invalid file" << std::endl;
-  // }
+
+
+
+  } catch (std::exception e) {
+    std::cerr << e.what()<<" Annuaire: Invalid file" << std::endl;
+  }
+
+
+
+
+
 }
 
 Annuaire::~Annuaire()
@@ -93,14 +108,15 @@ void				Annuaire::inscrire(const Personne &p_personne, const Adresse &p_adresse)
 //! \exception logic_error si l'enfant n'existe pas dans le bottin
 void				Annuaire::ajouterEnfant(const Personne &p_parent, const Personne &p_enfant)
 {
-  if (m_bottin.appartient(p_parent) == false
-      || m_bottin.appartient(p_enfant) == false)
-    throw std::logic_error("Annuaire: le parent ou l'enfant n'existe pas dans le bottin");
+  // if (m_bottin.appartient(p_parent) == false
+  //     || m_bottin.appartient(p_enfant) == false)
+  //   throw std::logic_error("Annuaire: le parent ou l'enfant n'existe pas dans le bottin");
 
   if (p_parent == p_enfant)
     {
       ArbreGenealogique	nouvelArbre(p_parent);
       m_listArbreGene.push_back(nouvelArbre);
+      return ;
     }
 
   std::list<ArbreGenealogique>::iterator	it = m_listArbreGene.begin();
@@ -132,6 +148,15 @@ std::list<ArbreGenealogique>		Annuaire::getListArbreGen() const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
 {
-  // p_os << p_annuaire.getBottin() << p_annuaire.getListArbreGen();
+  // p_os << p_annuaire.getBottin();
+  int			i = 0;
+
+  std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
+
+  while (i++ < p_annuaire.getListArbreGen().size())
+    {
+      p_os << *it << std::endl;
+      ++it;
+    }
   return p_os;
 }

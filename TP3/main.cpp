@@ -12,6 +12,8 @@ int		main()
   // Adresse		adr(62, "rue des Bourrelier", "Moissy_Cramayel");
   Annuaire	anu(fichier);
 
+
+  std::cout << anu;
   fichier.close();
   return 0;
 }

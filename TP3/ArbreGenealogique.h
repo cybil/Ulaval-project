@@ -66,6 +66,7 @@ public :
   //! \param[out] p_os le flux de sortie contenant l'arbre formatee
   //! \return un flux de sortie pour les appels en cascade
 
+  Noeud				*m_racine;
   friend std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG);
 
 private:
@@ -97,11 +98,10 @@ private:
     					            std::vector<Personne *> p_tab_personne) const;
 
 
-  std::string	_display(Noeud *p_noeud, std::string &p_str) const;
-  std::string		display() const;
+  void _display(Noeud *p_noeud, std::ostream &) const;
+  void display(std::ostream &) const;
   // Attributs prives
 
-  Noeud				*m_racine;
   std::string			m_nom;
 
 };

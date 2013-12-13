@@ -10,7 +10,7 @@
 ArbreGenealogique::Noeud::Noeud(const Personne& p_personne)
   : m_gauche(NULL), m_droite(NULL), m_hauteur(0) 
 {
-  m_personne = const_cast<Personne*>(&p_personne);
+  m_personne = new Personne(p_personne);
 }
 
 ArbreGenealogique::Noeud::~Noeud()
@@ -43,30 +43,29 @@ ArbreGenealogique::~ArbreGenealogique()
 void				ArbreGenealogique::ajouterEnfant(const Personne &p_parent,
 								 const Personne &p_enfant)
 {
-  if (m_racine == NULL)
-  {
-    m_racine = new Noeud(p_enfant);
-    return;
-  }
-
-  Noeud *ptr_noeud;
+  Noeud *ptr_noeud = NULL;
 
   trouvePersonne(p_parent, ptr_noeud);
   if (ptr_noeud == NULL)
-    return;
+    return ;
   
   if (ptr_noeud->m_gauche == NULL)
-    ptr_noeud->m_gauche = new Noeud(p_enfant);
+    {
+      ptr_noeud->m_gauche = new Noeud(p_enfant);
+      std::cout << "Noeud fils: " << *(ptr_noeud->m_gauche->m_personne) << std::endl;
+    }
   else
-  _ajouterEnfant(ptr_noeud->m_gauche, p_enfant);
+    _ajouterEnfant(ptr_noeud->m_gauche, p_enfant);
 }
 
 void				ArbreGenealogique::_ajouterEnfant(Noeud *p_noeud_fils,
     								  const Personne &p_enfant)
 {
+    std::cout << "Noeud fils: " << *(p_noeud_fils->m_personne) << std::endl;
   if (p_noeud_fils->m_droite == NULL) 
   {
     p_noeud_fils->m_droite = new Noeud(p_enfant);
+    std::cout << "Noeud fils: " << *(p_noeud_fils->m_droite->m_personne) << std::endl;
     return;
   }
   _ajouterEnfant(p_noeud_fils->m_droite, p_enfant);
@@ -75,23 +74,26 @@ void				ArbreGenealogique::_ajouterEnfant(Noeud *p_noeud_fils,
 void				ArbreGenealogique::trouvePersonne(const Personne &p_personne,
 						 Noeud *&p_trouve) const
 {
-  p_trouve = NULL;
   _trouvePersonne(m_racine, p_personne, p_trouve);    
 }
 
 void				ArbreGenealogique::_trouvePersonne(Noeud *p_racine, 
-    						 const Personne &p_personne,
-						 Noeud *&p_trouve) const
+								   const Personne &p_personne,
+								   Noeud *&p_trouve) const
 {
-  if (p_trouve)
-    return;
+  std::cout << "--->  " << *(p_racine->m_personne) << std::endl;
   if (p_personne == *(p_racine->m_personne)) 
-  {
-    p_trouve = p_racine;
+    {
+      p_trouve = p_racine;
+      std::cout << "Trouve: " << *(p_racine->m_personne) << std::endl;
+      return;
+    }
+  if (p_trouve || (p_racine->m_gauche == NULL && p_racine->m_droite == NULL))
     return;
-  }
-  _trouvePersonne(p_racine->m_gauche, p_personne, p_trouve);
-  _trouvePersonne(p_racine->m_droite, p_personne, p_trouve);
+  if (m_racine->m_gauche) 
+    _trouvePersonne(p_racine->m_gauche, p_personne, p_trouve);
+  if (m_racine->m_droite)
+    _trouvePersonne(p_racine->m_droite, p_personne, p_trouve);
 }
 
 //! \brief Trouve tous les enfants du parent
@@ -139,32 +141,35 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 {
-  p_os << p_arbreG.display() << std::endl;
+  std::cout << "operateur << arbre" << std::endl;
+  p_arbreG.display(p_os);
+  p_os << std::endl;
   return p_os;
 }
 
-std::string		ArbreGenealogique::display() const
+void ArbreGenealogique::display(std::ostream &p_os) const
 {
- std::string 		str = "";
- 
- _display(m_racine, str);
-
- return str;
+ _display(m_racine, p_os);
 }
 
-std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str) const
+void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
 {
   if (p_noeud == NULL)
-    return p_str;
-  p_str += p_noeud->m_personne->reqNom();
+      return;
+  
+  os << *(p_noeud->m_personne);
+  
   if (p_noeud->m_droite)
-  {
-    p_str += ", ";
-    _display(p_noeud->m_droite, p_str);
-  }
+    {
+     os << ", ";
+      _display(p_noeud->m_droite, os);
+    }
   if (p_noeud->m_gauche)
-  {
-    p_str += "\n" + p_noeud->m_personne->reqNom() + " :\n";
-    _display(p_noeud->m_gauche, p_str);
-  }
+    {
+      os << std::endl;
+      os << "Parent : " << *(p_noeud->m_personne) << " --> ";
+      _display(p_noeud->m_gauche, os);
+    }
+
+  return;
 }
