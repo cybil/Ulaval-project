@@ -66,7 +66,6 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	    Personne	enfant(nom, prenom, atoi(date.c_str()));
 	    ajouterEnfant(parent, enfant);
 	  }
-	std::cout << " --- " << std::endl;
       }
   } catch (std::exception e) {
     std::cerr << e.what()<<" Annuaire: Invalid file" << std::endl;
@@ -102,7 +101,6 @@ void				Annuaire::ajouterEnfant(const Personne &p_parent, const Personne &p_enfa
 
   if (p_parent == p_enfant)
     {
-      std::cout << "ADD NEW ARBRE GENE" << std::endl;
       ArbreGenealogique	nouvelArbre(p_parent);
       m_listArbreGene.push_back(nouvelArbre);
       return ;

@@ -51,7 +51,6 @@ void				ArbreGenealogique::ajouterEnfant(const Personne &p_parent,
   if (ptr_noeud->m_gauche == NULL)
     {
       ptr_noeud->m_gauche = new Noeud(p_enfant);
-      std::cout << "Noeud fils: " << *(ptr_noeud->m_gauche->m_personne) << std::endl;
     }
   else
     _ajouterEnfant(ptr_noeud->m_gauche, p_enfant);
@@ -60,11 +59,9 @@ void				ArbreGenealogique::ajouterEnfant(const Personne &p_parent,
 void				ArbreGenealogique::_ajouterEnfant(Noeud *p_noeud_fils,
     								  const Personne &p_enfant)
 {
-    std::cout << "Noeud fils: " << *(p_noeud_fils->m_personne) << std::endl;
   if (p_noeud_fils->m_droite == NULL) 
   {
     p_noeud_fils->m_droite = new Noeud(p_enfant);
-    std::cout << "Noeud fils: " << *(p_noeud_fils->m_droite->m_personne) << std::endl;
     return;
   }
   _ajouterEnfant(p_noeud_fils->m_droite, p_enfant);
@@ -80,11 +77,9 @@ void				ArbreGenealogique::_trouvePersonne(Noeud *p_racine,
 								   const Personne &p_personne,
 								   Noeud *&p_trouve) const
 {
-  std::cout << "--->  " << *(p_racine->m_personne) << std::endl;
   if (p_personne == *(p_racine->m_personne)) 
     {
       p_trouve = p_racine;
-      std::cout << "Trouve: " << *(p_racine->m_personne) << std::endl;
       return;
     }
   if (p_trouve || (p_racine->m_gauche == NULL && p_racine->m_droite == NULL))
@@ -154,7 +149,6 @@ void				ArbreGenealogique::_postOrdre(Noeud *p_Ncourant,
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 {
-  std::cout << "operateur << arbre" << std::endl;
   p_arbreG.display(p_os);
   p_os << std::endl;
   return p_os;
