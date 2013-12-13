@@ -340,6 +340,8 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 {
   if (estVide())
     return NULL;
+  if(p_racine == NULL)
+	  return NULL;
   if (p_racine->m_cle == p_cle)
     return p_racine;
   if (p_racine->m_cle > p_cle)
@@ -365,22 +367,37 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(
     const TypeCle    & key,
     const TypeValeur & value
 ) {
-    if (!node) {
-        node = new Noeud(key, value);
-        ++m_cardinalite;
-    } else if (node->m_cle > key) {
-        _inserer(node->m_gauche, key, value);
-        if (_hauteur(node->m_gauche) - _hauteur(node->m_droite) == 2)
-            node->m_gauche->m_cle > key ? _zigZigGauche(node) : _zigZagGauche(node);
-        else
-            node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche), _hauteur(node->m_droite));
-    } else {
-        _inserer(node->m_droite, key, value);
-        if (_hauteur(node->m_droite) - _hauteur(node->m_gauche) == 2)
-            node->m_droite->m_cle > key ? _zigZigDroit(node) : _zigZagDroit(node);
-        else
-            node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite), _hauteur(node->m_gauche));
-    }
+	if (node == 0)
+	{
+		node = new Noeud(key, value);
+		node->m_hauteur++;
+		m_cardinalite++;
+		return;
+	}
+	if(node->m_cle > key )
+	{
+		_inserer(node->m_gauche, key, value);
+		if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == 2 ||
+				(_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == -2)
+		{
+			if (node->m_gauche->m_cle > key) _zigZigGauche(node);
+			else _zigZagGauche(node);
+		}
+		else
+			node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));
+	}
+	else
+	{
+		_inserer(node->m_droite, key, value);
+		if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == 2 ||
+				(_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == -2)
+		{
+			if (node->m_droite->m_cle > key) _zigZigDroit(node);
+			else _zigZagDroit(node);
+		}
+		else
+			node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite),_hauteur(node->m_gauche));
+	}
 }
 
 //! \param[in] p_cle la cle du noeud que l'on veut enlever

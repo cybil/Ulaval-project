@@ -20,9 +20,10 @@ int		main()
   ArbreAVL<int, int>	abr;
   std::cout << abr.appartient(120) << std::endl;
   abr.inserer(1, 1);
-  std::cout << abr.appartient(1) << std::endl;
-  abr.lister();
-//  abr.inserer(3, 3);
+//  std::cout << abr.appartient(1) << std::endl;
+//  std::cout << abr.appartient(120) << std::endl;
+//  abr.lister();
+  abr.inserer(3, 3);
 //  abr.inserer(4, 4);
 //  abr.inserer(5, 5);
 //  std::cout << abr.appartient(2) << std::endl;
