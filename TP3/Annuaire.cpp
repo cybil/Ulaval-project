@@ -106,6 +106,7 @@ void				Annuaire::ajouterEnfant(const Personne &p_parent, const Personne &p_enfa
 
   if (p_parent == p_enfant)
     {
+      std::cout << "ADD NEW ARBRE GENE" << std::endl;
       ArbreGenealogique	nouvelArbre(p_parent);
       m_listArbreGene.push_back(nouvelArbre);
       return ;
@@ -146,11 +147,9 @@ std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
   p_os << "Arbre genealogique: " << std::endl;
   std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
 
-  while (i < p_annuaire.getListArbreGen().size()
-	 && it != p_annuaire.getListArbreGen().end())
+  while (i++ < p_annuaire.getListArbreGen().size())
     {
       p_os << *it << std::endl;
-      ++i;
       ++it;
     }
   return p_os;
