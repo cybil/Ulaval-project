@@ -45,9 +45,9 @@ TEST_F(ArbreAVLTest, taille)
 TEST_F(ArbreAVLTest, hauteur)
 {
   arb.inserer(1, 1);
-  EXPECT_EQ(arb.hauteur(), 1);
+  EXPECT_EQ(arb.hauteur(), 0);
   arb.inserer(1, 1);
-  EXPECT_EQ(arb.hauteur(), 2);
+  EXPECT_EQ(arb.hauteur(), 1);
 }
 
 TEST_F(ArbreAVLTest, enlever)
