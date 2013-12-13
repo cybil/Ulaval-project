@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <exception>
+#include <utility>
 #include "ArbreAVL.h"
 
 // ******************
@@ -173,7 +174,7 @@ std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::successeur(const T
 	if (m_racine == NULL)
 		throw std::logic_error("successeur : l'arbre est vide!");
 	Noeud *node = _successeur(m_racine, p_cle);
-	return (make_paire(node->m_cle, node->m_valeur));
+	return (std::make_pair(node->m_cle, node->m_valeur));
 }
 
 //! \brief Trouver une valeur a une cle donnee
@@ -550,11 +551,12 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
+
 	if (p_racine == NULL)
 		return;
 	if (p_racine->m_gauche)
 		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
-	p_vecteur.push_back(make_paire(p_racine->m_cle, p_racine->m_valeur));
+	p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
 	if (p_racine->m_droite)
 		_auxPreOrdre(p_racine->m_droite, p_vecteur);
 	return;
@@ -577,7 +579,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_auxPreOrdre(ArbreAVL<TypeCle, TypeValeur>::
 {
 	if (p_racine == NULL)
 	      return;
-	p_vecteur.push_back(make_paire(p_racine->m_cle, p_racine->m_valeur));
+	p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
 	if (p_racine->m_gauche)
 		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
 	if (p_racine->m_droite)
