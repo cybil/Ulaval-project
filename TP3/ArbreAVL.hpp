@@ -597,10 +597,10 @@ void ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeVale
 	if (p_racine == NULL)
 		return;
 	if (p_racine->m_gauche)
-		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
+		_visiteSymetrique(p_racine->m_gauche, p_vecteur);
 	p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
 	if (p_racine->m_droite)
-		_auxPreOrdre(p_racine->m_droite, p_vecteur);
+		_visiteSymetrique(p_racine->m_droite, p_vecteur);
 	return;
 }
 
