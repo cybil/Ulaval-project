@@ -136,3 +136,12 @@ std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
     }
   return p_os;
 }
+
+int Annuaire::getTailleArbreAVL() const {
+  return m_bottin.taille();
+}
+
+int Annuaire::getTailleArbreGenealogique() const
+{
+  return m_listArbreGene.size();
+}
