@@ -142,43 +142,34 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 {
   std::cout << "operateur << arbre" << std::endl;
-  p_os << p_arbreG.display() << std::endl;
+  p_arbreG.display(p_os);
+  p_os << std::endl;
   return p_os;
 }
 
-std::string		ArbreGenealogique::display() const
+void ArbreGenealogique::display(std::ostream &p_os) const
 {
- std::string 		str = "";
- 
- _display(m_racine, str);
-
- return str;
+ _display(m_racine, p_os);
 }
 
-std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str) const
+void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
 {
-  std::cout << "la 1" << std::endl;
-
   if (p_noeud == NULL)
-    {
-      std::cout << "c'est fini" << std::endl;
-      return p_str;
-}
-  std::cout << "la 2" << std::endl;
+      return;
   
-  p_str += p_noeud->m_personne->reqNom();
-  std::cout << "--> " << p_str << std::endl;
+  os << *(p_noeud->m_personne);
   
   if (p_noeud->m_droite)
     {
-      p_str += ", ";
-      _display(p_noeud->m_droite, p_str);
+     os << ", ";
+      _display(p_noeud->m_droite, os);
     }
   if (p_noeud->m_gauche)
     {
-      p_str += "\n" + p_noeud->m_personne->reqNom() + " :\n";
-      _display(p_noeud->m_gauche, p_str);
+      os << std::endl;
+      os << "Parent : " << *(p_noeud->m_personne) << " --> ";
+      _display(p_noeud->m_gauche, os);
     }
 
-  return p_str;
+  return;
 }

@@ -153,11 +153,9 @@ std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
 
   std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
 
-  while (i < p_annuaire.getListArbreGen().size() && it != p_annuaire.getListArbreGen().end())
+  while (i++ < p_annuaire.getListArbreGen().size())
     {
-            p_os << *it << std::endl;
-	    p_os << *(it->m_racine->m_personne) << std::endl;
-      ++i;
+      p_os << *it << std::endl;
       ++it;
     }
   return p_os;

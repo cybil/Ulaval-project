@@ -98,8 +98,8 @@ private:
     					            std::vector<Personne *> p_tab_personne) const;
 
 
-  std::string	_display(Noeud *p_noeud, std::string &p_str) const;
-  std::string		display() const;
+  void _display(Noeud *p_noeud, std::ostream &) const;
+  void display(std::ostream &) const;
   // Attributs prives
 
   std::string			m_nom;
