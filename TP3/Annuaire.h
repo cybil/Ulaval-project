@@ -26,8 +26,8 @@ public:
 
   ~Annuaire();
 
-  ArbreAVL<Personne, Adresse>	getBottin() const;
-  std::list<ArbreGenealogique>	getListArbreGen() const;
+  /* ArbreAVL<Personne, Adresse>	getBottin() const; */
+  /* std::list<ArbreGenealogique>	getListArbreGen() const; */
 
   void				inscrire(const Personne &p_personne, const Adresse &p_adresse);
   void				ajouterEnfant(const Personne &p_parent, const Personne &p_enfant);

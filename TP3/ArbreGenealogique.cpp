@@ -17,7 +17,6 @@ ArbreGenealogique::Noeud::~Noeud()
 {
 }
 
-//******************
 // Constructeur / Destructeur ArbreGenealogique
 //*******************
 
@@ -106,7 +105,8 @@ std::vector<Personne *>		ArbreGenealogique::enfantsDe(const Personne &p_parent) 
   trouvePersonne(p_parent, tmp_noeud);
   if (tmp_noeud == NULL)
     return tab_personne;
-  _creerVecteurEnfant(tmp_noeud->m_gauche, tab_personne);  
+  _creerVecteurEnfant(tmp_noeud->m_gauche, tab_personne);
+  return tab_personne;
 }
 
 void				ArbreGenealogique::_creerVecteurEnfant(Noeud *p_enfant,
@@ -139,13 +139,13 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 //! \param[in] p_Ncourant l'arbre parcouru
 //! \param[in] p_vPersonnes un vector contenant le resultat du parcours
 //! \post p_vPersonnes est rempli
-void				_postOrdre(Noeud *p_Ncourant,
+void				ArbreGenealogique::_postOrdre(Noeud *p_Ncourant,
 					   std::vector<Personne *> &p_vPersonnes) const
 {
   if (p_Ncourant == NULL)
     return ;
-  _postOrdre(p_Ncourant->m_gauche);
-  _postOrdre(p_Ncourant->m_droite);
+  _postOrdre(p_Ncourant->m_gauche, p_vPersonnes);
+  _postOrdre(p_Ncourant->m_droite, p_vPersonnes);
   p_vPersonnes.push_back(p_Ncourant->m_personne);
 }
 
@@ -169,10 +169,8 @@ void ArbreGenealogique::display(std::ostream &p_os) const
 void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
 {
   if (p_noeud == NULL)
-      return;
-  
+    return;
   os << *(p_noeud->m_personne);
-  
   if (p_noeud->m_gauche)
     {
       os << std::endl;
@@ -181,7 +179,7 @@ void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
     }
   if (p_noeud->m_droite)
     {
-     os << ", ";
+      os << ", ";
       _display(p_noeud->m_droite, os);
     }
 

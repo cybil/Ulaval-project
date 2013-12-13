@@ -70,10 +70,11 @@ ArbreAVL<TypeCle, TypeValeur>::~ArbreAVL()
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur> &ArbreAVL<TypeCle, TypeValeur>::operator=(const ArbreAVL<TypeCle, TypeValeur> &p_arbre)
 {
-  ArbreAVL< TypeCle, TypeValeur > newArbre = new ArbreAVL();
-  newArbre.m_racine = _copier(p_arbre.m_racine);
-  newArbre.m_cardinalite = p_arbre.m_cardinalite;
-  return newArbre;
+  if (m_racine != NULL)
+    _detruire(m_racine);
+  m_racine = _copier(p_arbre.m_racine);
+  m_cardinalite = p_arbre.m_cardinalite;
+  return this;
 }
 
 //! \brief Surcharge de l'operateur ==
@@ -83,7 +84,19 @@ ArbreAVL<TypeCle, TypeValeur> &ArbreAVL<TypeCle, TypeValeur>::operator=(const Ar
 template<typename TypeCle, typename TypeValeur>
 bool ArbreAVL<TypeCle, TypeValeur>::operator==(const ArbreAVL<TypeCle, TypeValeur> &p_arbre) const
 {
+	std::vector<std::pair<TypeCle, TypeValeur> > vec1;
+	std::vector<std::pair<TypeCle, TypeValeur> > vec2;
+  vec1 = lister();
+  vec2 = p_arbre.lister();
+  int len1 = vec1.size();
+  int len2 = vec2.size();
 
+  if (len1 != len2)
+    return false;
+  for (int i = 0; i < len1; i++)
+    if (vec1[i].first != vec2[i].first || vec1[i].second != vec2[i].second)
+      return false;
+  return true;
 }
 
 //! \brief Verifier si l'arbre est vide
@@ -157,14 +170,10 @@ std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::parent(const TypeC
 template<typename TypeCle, typename TypeValeur>
 std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::successeur(const TypeCle &p_cle)
 {
-  Noeud * tmp;
-  if (estVide())
-    throw std::logic_error("Successeur: l'arbre est vide");
-  if (appartient(p_cle) == false)
-    throw std::logic_error("Successeur: la cle n'existe pas dans l'arbre");
-  tmp = _max(m_racine);
-  if (tmp->m_cle == p_cle)
-    throw std::logic_error("Successeur: cet element est le maximum de l'arbre");
+	if (m_racine == NULL)
+		throw std::logic_error("successeur : l'arbre est vide!");
+	Noeud *node = _successeur(m_racine, p_cle);
+	return (make_paire(node->m_cle, node->m_valeur));
 }
 
 //! \brief Trouver une valeur a une cle donnee
@@ -195,7 +204,9 @@ TypeCle * ArbreAVL<TypeCle, TypeValeur>::cle(const TypeCle &p_cle)
 template<typename TypeCle, typename TypeValeur>
 std::vector<std::pair<TypeCle, TypeValeur> > ArbreAVL<TypeCle, TypeValeur>::lister() const
 {
-
+	std::vector<std::pair<TypeCle, TypeValeur> > vec;
+	_visiteSymetrique(m_racine, vec);
+	return (vec);
 }
 
 //! \brief Lister un arbre pre-ordre
@@ -206,7 +217,9 @@ std::vector<std::pair<TypeCle, TypeValeur> > ArbreAVL<TypeCle, TypeValeur>::list
 template<typename TypeCle, typename TypeValeur>
 std::vector<std::pair<TypeCle, TypeValeur> > ArbreAVL<TypeCle, TypeValeur>::listerPreOrdre() const
 {
-
+	std::vector<std::pair<TypeCle, TypeValeur> > vec;
+	_auxPreOrdre(m_racine, vec);
+	return vec;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -240,8 +253,8 @@ void ArbreAVL<TypeCle, TypeValeur>::enlever(const TypeCle &p_cle)
 // Methodes privees
 //******************
 
-//! \brief Retourne le plus grand nombre
-//! \param[in] p_premier le premier nombre a comparer
+//! \brief Retourne lsource grand nombre
+//! \param[in] p_psource le premier nombre a comparer
 //! \param[in] p_second le second nombre a comparer
 //! \return le plus grand des deux nombres
 template<typename TypeCle, typename TypeValeur>
@@ -251,16 +264,16 @@ int ArbreAVL<TypeCle, TypeValeur>::_maximum(int p_premier, int p_second) const
 }
 
 template<typename TypeCle, typename TypeValeur>
-typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_max(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud* ArbreAVL<TypeCle, TypeValeur>::_max(ArbreAVL<TypeCle, TypeValeur>::Noeud* p_source)
 {
-	if (estVide())
+	if (m_cardinalite == 0)
 		throw std::logic_error("max: l'arbre est vide!\n");
-	if (!p_racine->m_droite)
-		return p_racine;
-	Noeud * temp = p_racine->m_droite;
-	while (temp->m_droite)
+	if (p_source->m_droite == 0)
+		return p_source->m_cle;
+	Noeud * temp = p_source->m_droite;
+	while (temp->m_droite!=0)
 		temp = temp->m_droite;
-	return temp;
+	return temp->m_cle;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -276,24 +289,46 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 	return temp;
 }
 
+//! \brief Copier un arbre
+//! \param[in] p_racine le noeud a partir duquel on veut demarrer la copie
 template<typename TypeCle, typename TypeValeur>
-typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_copier(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_noeud)
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_copier(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
-
+  if (p_racine == NULL)
+    return NULL;
+  Noeud* node = new Noeud(p_racine->m_cle, p_racine->m_valeur);
+  _auxCopier(p_racine->m_gauche, node);
+  _auxCopier(p_racine->m_droite, node);
+  return (node);
 }
+
+template<typename TypeCle, typename TypeValeur>
+void ArbreAVL<TypeCle, TypeValeur>::_auxCopier(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_source, ArbreAVL<TypeCle, TypeValeur>::Noeud *p_dest)
+{
+  if (p_source == NULL)
+    return ;
+  _inserer(p_dest, p_source->m_cle, p_source->m_valeur);
+  _auxCopier(p_source->m_gauche, p_source);
+  _auxCopier(p_source->m_droite, p_source);
+}
+
 
 //! \brief Detruit un arbre
 //! \param[in] p_racine le noeud a partir duquel on veut demarrer la destruction
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_detruire(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
-
+  if (p_racine == NULL)
+    return ;
+  _detruire(p_racine->m_gauche);
+  _detruire(p_racine->m_droite);
+  delete p_racine;
 }
 
 template<typename TypeCle, typename TypeValeur>
-typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_trouver(const TypeCle &p_cle, Noeud *&p_noeud)
+typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_trouver(const TypeCle &p_cle, Noeud *&p_noeud) const
 {
-
+  return _auxAppartient(p_noeud, p_cle);
 }
 
 //! \param[in] p_racine la racine de l'arbre ou chercher
@@ -317,7 +352,7 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine) const
 {
-
+	return _auxAppartient(m_racine, p_cle)->m_valeur;
 }
 
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
@@ -445,7 +480,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>:
 template<typename TypeCle, typename TypeValeur>
 int ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
-
+	return p_noeud->m_hauteur;
 }
 
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent
@@ -475,7 +510,17 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_successeurParent(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, ArbreAVL<TypeCle, TypeValeur>::Noeud *sArb)
 {
-
+  if (p_racine == NULL || sArb == NULL)
+    return NULL;
+  if ( sArb == _min(p_racine))
+    throw std::logic_error("successeur: l'element est le min dans l'arbre!\n");
+  if (p_racine->m_droite->m_cle == sArb->m_cle)
+    return p_racine;
+  if (p_racine->m_gauche->m_cle == sArb->m_cle)
+    return p_racine->m_gauche;
+  if (p_racine->m_cle > sArb->m_cle)
+    return _successeurParent(p_racine->m_gauche, sArb);
+  return _successeurParent(p_racine->m_droite, sArb);
 }
 
 //! \param[in] p_racine la racine de l'arbre ou l'on cherche le successeur
@@ -484,7 +529,19 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_successeur(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, const TypeCle &p_cle)
 {
-
+	Noeud* sArb;
+	if ((sArb = _auxAppartient(m_racine, p_cle)) == NULL)
+		throw std::logic_error("successeur : Cette cle n'existe pas dans l'arbre");
+	if ( sArb == _max(p_racine))
+		throw std::logic_error("successeur: l'element est le max dans l'arbre!\n");
+	if (sArb->m_droite != 0)
+		return _min(sArb->m_droite);
+	else
+	{
+		Noeud * pere = _parent(p_racine, sArb);
+		while (pere->m_cle < sArb->m_cle ) pere = _parent(p_racine, pere);
+		return pere;
+	}
 }
 
 //! \brief Parcours de l'arbre de facon symetrique
@@ -493,7 +550,14 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
-
+	if (p_racine == NULL)
+		return;
+	if (p_racine->m_gauche)
+		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
+	p_vecteur.push_back(make_paire(p_racine->m_cle, p_racine->m_valeur));
+	if (p_racine->m_droite)
+		_auxPreOrdre(p_racine->m_droite, p_vecteur);
+	return;
 }
 
 //! \param[in] p_racine la racine de l'arbre dont on veut la hauteur
@@ -511,5 +575,12 @@ int ArbreAVL<TypeCle, TypeValeur>::_hauteurParcours(ArbreAVL<TypeCle, TypeValeur
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_auxPreOrdre(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
-
+	if (p_racine == NULL)
+	      return;
+	p_vecteur.push_back(make_paire(p_racine->m_cle, p_racine->m_valeur));
+	if (p_racine->m_gauche)
+		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
+	if (p_racine->m_droite)
+		_auxPreOrdre(p_racine->m_droite, p_vecteur);
+	return;
 }

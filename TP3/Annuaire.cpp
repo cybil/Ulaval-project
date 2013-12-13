@@ -56,19 +56,15 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	    getline(p_fichierEntree, prenom);
 	    getline(p_fichierEntree, date);
 
-	    if (nom == "" || prenom == "" || date == "") {	
-	      std::cout << std::endl << std::endl << "fin" << std::endl;
+	    if (nom == "" || prenom == "" || date == "")
 	      return;
-	    }
-	    Personne	personne1(nom, prenom, atoi(date.c_str()));
+	    Personne	parent(nom, prenom, atoi(date.c_str()));
 	  
 	    getline(p_fichierEntree, nom);
 	    getline(p_fichierEntree, prenom);
 	    getline(p_fichierEntree, date);
-	    Personne	personne2(nom, prenom, atoi(date.c_str()));
-	    std::cout << "nom : " << personne1.reqNom() << " " << personne1.reqPrenom()  << std::endl;
-	    std::cout << "nom : " << personne2.reqNom() << " " << personne2.reqPrenom() <<  std::endl;
-	    ajouterEnfant(personne1, personne2);
+	    Personne	enfant(nom, prenom, atoi(date.c_str()));
+	    ajouterEnfant(parent, enfant);
 	  }
 	std::cout << " --- " << std::endl;
       }
@@ -121,19 +117,6 @@ void				Annuaire::ajouterEnfant(const Personne &p_parent, const Personne &p_enfa
 
 }
 
-
-//! \brief Retourne le bottin
-ArbreAVL<Personne, Adresse>		Annuaire::getBottin() const
-{
-  return m_bottin;
-}
-
-//! \brief Retourne la liste des arbres genealogique
-std::list<ArbreGenealogique>		Annuaire::getListArbreGen() const
-{
-  return m_listArbreGene;
-}
-
 //! \brief Operateur de sortie du contenu de l'annuaire formatage des infos dans une string puis sortie
 //! \param[in] p_annuaire l'annuaire a sortir
 //! \pre l'annuaire n'est pas vide
@@ -141,13 +124,12 @@ std::list<ArbreGenealogique>		Annuaire::getListArbreGen() const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
 {
-  // p_os << "Bottin: " << std::endl << p_annuaire.getBottin() << std::endl;
-  int			i = 0;
+  // p_os << p_annuaire.m_bottin();
 
   p_os << "Arbre genealogique: " << std::endl;
-  std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
+  std::list<ArbreGenealogique>::const_iterator	it = p_annuaire.m_listArbreGene.begin();
 
-  while (i++ < p_annuaire.getListArbreGen().size())
+  while (it != p_annuaire.m_listArbreGene.end())
     {
       p_os << *it << std::endl;
       ++it;
