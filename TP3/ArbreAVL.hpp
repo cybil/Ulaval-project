@@ -13,8 +13,11 @@
 //! \post un noeud typique est initialise
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL< TypeCle, TypeValeur >::Noeud::Noeud(const TypeCle &p_cle, const TypeValeur &p_valeur)
-  : m_cle(p_cle), m_valeur(p_valeur), m_gauche(NULL), m_droite(NULL), m_hauteur(0)
+  : m_cle(p_cle), m_valeur(p_valeur)
 {
+  m_gauche = NULL;
+  m_droite = NULL;
+  m_hauteur = 0;
 }
 
 
@@ -35,9 +38,9 @@ ArbreAVL< TypeCle, TypeValeur >::Noeud::~Noeud()
 //! \post une instance de la classe ArbreAVL est initialisee
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur>::ArbreAVL()
-  : m_cardinalite(0), m_racine(NULL)
+  : m_cardinalite(0)
 {
-
+  m_racine = NULL;
 }
 
 //! \brief Constructeur par copie (appelle _copier)
@@ -48,8 +51,8 @@ ArbreAVL<TypeCle, TypeValeur>::ArbreAVL()
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur>::ArbreAVL(const ArbreAVL<TypeCle, TypeValeur> &p_source)
 {
-  m_cardinalite = p_source.m_cardinalite;
-  m_racine = _copier(p_source.m_racine);
+  std::cout << "COPIE" << std::endl;
+  *this = p_source;
 }
 
 //! \brief Destructeur
@@ -73,11 +76,12 @@ ArbreAVL<TypeCle, TypeValeur>::~ArbreAVL()
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur> &ArbreAVL<TypeCle, TypeValeur>::operator=(const ArbreAVL<TypeCle, TypeValeur> &p_arbre)
 {
+  std::cout << "OPERTEUR =" << std::endl;
   if (m_racine != NULL)
     _detruire(m_racine);
   m_racine = _copier(p_arbre.m_racine);
   m_cardinalite = p_arbre.m_cardinalite;
-  return this;
+  return *this;
 }
 
 //! \brief Surcharge de l'operateur ==
@@ -174,7 +178,7 @@ template<typename TypeCle, typename TypeValeur>
 std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::successeur(const TypeCle &p_cle)
 {
 	if (m_racine == NULL)
-		throw std::logic_error("successeur : l'arbre est vide!");
+	  throw std::logic_error("successeur : l'arbre est vide!");
 	Noeud *node = _successeur(m_racine, p_cle);
 	return (std::make_pair(node->m_cle, node->m_valeur));
 }
@@ -347,7 +351,8 @@ void ArbreAVL<TypeCle, TypeValeur>::_detruire(ArbreAVL<TypeCle, TypeValeur>::Noe
     return ;
   _detruire(p_racine->m_gauche);
   _detruire(p_racine->m_droite);
-  delete p_racine;
+  if (p_racine != NULL)
+    delete p_racine;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -365,7 +370,7 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
   if (estVide())
     return NULL;
   if(p_racine == NULL)
-	  return NULL;
+    return NULL;
   if (p_racine->m_cle == p_cle)
     return p_racine;
   if (p_racine->m_cle > p_cle)
@@ -384,7 +389,7 @@ TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL
 
 static void my_dg(std::string str)
 {
-	std::cout << str << std::endl;
+  std::cout << str << std::endl;
 }
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
 //! \param[in] p_cle la cle de l'element a inserer
@@ -397,18 +402,19 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::Noeu
   if (node == 0)
     {
       node = new Noeud(key, value);
-      node->m_hauteur++;
       m_cardinalite++;
       return;
     }
-  if (node->m_cle > key )
+  if (node->m_cle > key)
     {
       _inserer(node->m_gauche, key, value);
       if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == 2 ||
 	  (_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == -2)
 	{
-	  if (node->m_gauche->m_cle > key) _zigZigGauche(node);
-	  else _zigZagGauche(node);
+	  if (node->m_gauche->m_cle > key)
+	    _zigZigGauche(node);
+	  else
+	    _zigZagGauche(node);
 	}
       else
 	node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));

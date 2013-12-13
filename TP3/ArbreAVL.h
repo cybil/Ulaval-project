@@ -83,6 +83,7 @@ private :
 					       std::pair<TypeCle,
 							 TypeValeur> > &p_vecteur) const;
 
+
   // Attributs prives
 
   long				m_cardinalite;
