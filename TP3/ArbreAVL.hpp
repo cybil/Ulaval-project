@@ -344,6 +344,8 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 {
   if (estVide())
     return NULL;
+  if(p_racine == NULL)
+	  return NULL;
   if (p_racine->m_cle == p_cle)
     return p_racine;
   if (p_racine->m_cle > p_cle)
@@ -368,26 +370,36 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::Noeu
 					     const TypeCle    & key,
 					     const TypeValeur & value)
 {
-  if (!node)
+  if (node == 0)
     {
       node = new Noeud(key, value);
-      ++m_cardinalite;
+      node->m_hauteur++;
+      m_cardinalite++;
+      return;
     }
-  else if (node->m_cle > key)
+  if (node->m_cle > key )
     {
       _inserer(node->m_gauche, key, value);
-      if (_hauteur(node->m_gauche) - _hauteur(node->m_droite) == 2)
-	node->m_gauche->m_cle > key ? _zigZigGauche(node) : _zigZagGauche(node);
+      if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == 2 ||
+	  (_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == -2)
+	{
+	  if (node->m_gauche->m_cle > key) _zigZigGauche(node);
+	  else _zigZagGauche(node);
+	}
       else
-	node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche), _hauteur(node->m_droite));
+	node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));
     }
   else
     {
       _inserer(node->m_droite, key, value);
-      if (_hauteur(node->m_droite) - _hauteur(node->m_gauche) == 2)
-	node->m_droite->m_cle > key ? _zigZigDroit(node) : _zigZagDroit(node);
+      if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == 2 ||
+	  (_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == -2)
+	{
+	  if (node->m_droite->m_cle <= key) _zigZigDroit(node);
+	  else _zigZagDroit(node);
+	}
       else
-	node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite), _hauteur(node->m_gauche));
+	node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite),_hauteur(node->m_gauche));
     }
 }
 
@@ -414,6 +426,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_enlever(const TypeCle & p_cle,
       Noeud * vieuxNoeud = p_racine;
       p_racine = p_racine->m_gauche ? p_racine->m_gauche : p_racine->m_droite;
       delete vieuxNoeud;
+      --m_cardinalite;
     }
   _balancer(p_racine);
 }
@@ -430,14 +443,36 @@ void ArbreAVL<TypeCle, TypeValeur>::_auxRetireMin(ArbreAVL<TypeCle, TypeValeur>:
       Noeud * tmp = p_noeud;
       p_noeud = p_noeud->m_droite;
       delete tmp;
+      --m_cardinalite;
     }
 }
 
 //! \param[in] p_racine la noeud dont on veut faire un rebalancement si necessaire
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_balancer(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine)
-{
-  
+{ 
+  if (estVide() == true)
+    throw std::logic_error("Balancer: l'arbre est vide");
+
+  if ((_hauteur(p_racine->m_gauche) - _hauteur(p_racine->m_droite)) == 2 ||
+      (_hauteur(p_racine->m_gauche) - _hauteur(p_racine->m_droite)) == -2)
+    {
+      if (p_racine->m_gauche->m_cle > p_racine->m_droite->m_cle)
+	_zigZigGauche(p_racine);
+      else
+	_zigZagGauche(p_racine);
+    }
+  else
+    {
+      if ((_hauteur(p_racine->m_droite) - _hauteur(p_racine->m_gauche)) == 2 ||
+	  (_hauteur(p_racine->m_droite) - _hauteur(p_racine->m_gauche)) == -2)
+	{
+	  if (p_racine->m_droite->m_cle <= p_racine->m_gauche->m_cle)
+	    _zigZigDroit(p_racine);
+	  else
+	    _zigZagDroit(p_racine);
+	}
+    }
 }
 
 //! \brief Cas de balancement zig zag droit
