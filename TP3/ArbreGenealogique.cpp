@@ -17,7 +17,6 @@ ArbreGenealogique::Noeud::~Noeud()
 {
 }
 
-//******************
 // Constructeur / Destructeur ArbreGenealogique
 //*******************
 
@@ -106,7 +105,8 @@ std::vector<Personne *>		ArbreGenealogique::enfantsDe(const Personne &p_parent) 
   trouvePersonne(p_parent, tmp_noeud);
   if (tmp_noeud == NULL)
     return tab_personne;
-  _creerVecteurEnfant(tmp_noeud->m_gauche, tab_personne);  
+  _creerVecteurEnfant(tmp_noeud->m_gauche, tab_personne);
+  return tab_personne;
 }
 
 void				ArbreGenealogique::_creerVecteurEnfant(Noeud *p_enfant,
@@ -156,9 +156,7 @@ void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
 {
   if (p_noeud == NULL)
       return;
-  
   os << *(p_noeud->m_personne);
-  
   if (p_noeud->m_droite)
     {
      os << ", ";

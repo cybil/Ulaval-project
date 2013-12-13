@@ -149,7 +149,7 @@ std::list<ArbreGenealogique>		Annuaire::getListArbreGen() const
 std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
 {
   // p_os << p_annuaire.getBottin();
-  int			i = 0;
+  unsigned int			i = 0;
 
   std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
 

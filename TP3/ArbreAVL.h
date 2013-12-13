@@ -52,10 +52,10 @@ private :
   Noeud				*_max(Noeud *p_racine);
   Noeud				*_min(Noeud *p_racine);
   Noeud				*_copier(Noeud *p_noeud);
-
+  void				_auxCopier(Noeud *p_source, Noeud *p_dest);
   void				_detruire(Noeud *p_racine);
 
-  Noeud				*_trouver(const TypeCle &p_cle, Noeud *&p_noeud);
+  Noeud				*_trouver(const TypeCle &p_cle, Noeud *&p_noeud) const;
   Noeud			        *_auxAppartient(Noeud *p_racine, const TypeCle &p_cle) const;
   TypeValeur			_valeur(const TypeCle &p_cle, Noeud *&p_racine) const;
   void				_inserer(Noeud *&p_racine, const TypeCle &p_cle,
@@ -82,9 +82,8 @@ private :
 
   // Attributs prives
 
-  Noeud				*m_racine;
   long				m_cardinalite;
-
+  Noeud				*m_racine;
 };
 
 
