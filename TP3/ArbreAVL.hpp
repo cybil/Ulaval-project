@@ -138,7 +138,12 @@ bool				ArbreAVL<TypeCle, TypeValeur>::appartient(const TypeCle &p_cle) const
 template<typename TypeCle, typename TypeValeur>
 std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::parent(const TypeCle &p_cle)
 {
-  
+	if (m_racine == NULL)
+		throw std::logic_error("L'arbre est vide");
+	if (_auxAppartient(m_racine, p_cle) == NULL)
+		throw std::logic_error("La cle n'existe pas dans l'arbre");
+	Noeud* parentDeEl = _parent(m_racine, p_cle);
+	return parentDeEl->m_cle;
 }
 
 //! \brief Retourner le successeur d'un element
@@ -301,12 +306,12 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud		        *ArbreAVL<TypeCle, TypeVa
 {
 	if (p_racine == 0)
 		return 0;
-	if ( p_racine->m_cle == cle )
+	if ( p_racine->m_cle == p_cle )
 		return p_racine;
-	if ( p_racine->m_cle > cle )
-		return _auxAppartient(p_racine->m_gauche, cle);
+	if ( p_racine->m_cle > p_cle )
+		return _auxAppartient(p_racine->m_gauche, p_cle);
 	else
-		return _auxAppartient(p_racine->m_droite, cle);
+		return _auxAppartient(p_racine->m_droite, p_cle);
 }
 
 //! \param[in] p_cle la cle de l'element recherche
@@ -440,7 +445,20 @@ template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_parent(const TypeCle &p_cle,
 												ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
+	Noeud* sArb = _auxAppartient(m_racine, p_cle);
 
+	if (sArb == p_racine)
+		throw std::logic_error("parent: Le parent de la racine d'existe pas!\n");
+	if ( sArb->m_cle < p_racine->m_cle )
+	{
+		if (p_racine->m_gauche == sArb) return p_racine;
+		else return _parent(p_racine->m_gauche, sArb);
+	}
+	else
+	{
+		if (p_racine->m_droite == sArb) return p_racine;
+		else return _parent(p_racine->m_droite, sArb);
+	}
 }
 
 //! \param[in] p_racine racine de l'arbre ou on cherche
