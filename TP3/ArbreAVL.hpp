@@ -313,7 +313,10 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine) const
 {
+	Noeud* node;
 
+	node = _auxAppartient(m_racine, p_cle);
+	return (node->m_valeur);
 }
 
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
