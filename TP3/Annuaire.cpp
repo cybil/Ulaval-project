@@ -57,8 +57,8 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	    getline(p_fichierEntree, date);
 
 	    if (nom == "" || prenom == "" || date == "") {	
-  std::cout << std::endl << std::endl << "fin" << std::endl;
-      return;
+	      std::cout << std::endl << std::endl << "fin" << std::endl;
+	      return;
 	    }
 	    Personne	personne1(nom, prenom, atoi(date.c_str()));
 	  
@@ -72,17 +72,9 @@ Annuaire::Annuaire(std::ifstream &p_fichierEntree)
 	  }
 	std::cout << " --- " << std::endl;
       }
-
-
-
   } catch (std::exception e) {
     std::cerr << e.what()<<" Annuaire: Invalid file" << std::endl;
   }
-
-
-
-
-
 }
 
 Annuaire::~Annuaire()
@@ -148,15 +140,16 @@ std::list<ArbreGenealogique>		Annuaire::getListArbreGen() const
 //! \return un flux de sortie pour les appels en cascade
 std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire)
 {
-  // p_os << p_annuaire.getBottin();
+  // p_os << "Bottin: " << std::endl << p_annuaire.getBottin() << std::endl;
   int			i = 0;
 
+  p_os << "Arbre genealogique: " << std::endl;
   std::list<ArbreGenealogique>::iterator	it = p_annuaire.getListArbreGen().begin();
 
-  while (i < p_annuaire.getListArbreGen().size() && it != p_annuaire.getListArbreGen().end())
+  while (i < p_annuaire.getListArbreGen().size()
+	 && it != p_annuaire.getListArbreGen().end())
     {
-            p_os << *it << std::endl;
-	    p_os << *(it->m_racine->m_personne) << std::endl;
+      p_os << *it << std::endl;
       ++i;
       ++it;
     }

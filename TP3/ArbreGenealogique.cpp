@@ -148,11 +148,12 @@ std::ostream		&operator<<(std::ostream &p_os, const ArbreGenealogique &p_arbreG)
 
 std::string		ArbreGenealogique::display() const
 {
- std::string 		str = "";
+  std::string 		str = "";
  
- _display(m_racine, str);
+  std::cout << "TEST ---> " << *(m_racine->m_personne) << std::endl;
+  _display(m_racine, str);
 
- return str;
+  return str;
 }
 
 std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str) const
@@ -163,7 +164,7 @@ std::string		ArbreGenealogique::_display(Noeud *p_noeud, std::string &p_str) con
     {
       std::cout << "c'est fini" << std::endl;
       return p_str;
-}
+    }
   std::cout << "la 2" << std::endl;
   
   p_str += p_noeud->m_personne->reqNom();
