@@ -34,6 +34,9 @@ public:
 
   friend std::ostream		&operator<<(std::ostream &p_os, const Annuaire &p_annuaire);
 
+  int getTailleArbreAVL() const;
+  int getTailleArbreGenealogique() const;
+
 private:
 
   ArbreAVL<Personne, Adresse>	m_bottin;

@@ -17,6 +17,8 @@ ArbreAVL< TypeCle, TypeValeur >::Noeud::Noeud(const TypeCle &p_cle, const TypeVa
 {
 }
 
+
+
 //! \brief Destructeur par defaut
 //! \post une instance de l'arbre est detruite
 template<typename TypeCle, typename TypeValeur>
@@ -358,6 +360,8 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 {
   if (estVide())
     return NULL;
+  if(p_racine == NULL)
+	  return NULL;
   if (p_racine->m_cle == p_cle)
     return p_racine;
   if (p_racine->m_cle > p_cle)
@@ -374,6 +378,10 @@ TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL
 	return _auxAppartient(m_racine, p_cle)->m_valeur;
 }
 
+static void my_dg(std::string str)
+{
+	std::cout << str << std::endl;
+}
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
 //! \param[in] p_cle la cle de l'element a inserer
 //! \param[in] p_valeur la valeur de l'element a inserer
@@ -383,22 +391,39 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(
     const TypeCle    & key,
     const TypeValeur & value
 ) {
-    if (!node) {
-        node = new Noeud(key, value);
-        ++m_cardinalite;
-    } else if (node->m_cle > key) {
-        _inserer(node->m_gauche, key, value);
-        if (_hauteur(node->m_gauche) - _hauteur(node->m_droite) == 2)
-            node->m_gauche->m_cle > key ? _zigZigGauche(node) : _zigZagGauche(node);
-        else
-            node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche), _hauteur(node->m_droite));
-    } else {
-        _inserer(node->m_droite, key, value);
-        if (_hauteur(node->m_droite) - _hauteur(node->m_gauche) == 2)
-            node->m_droite->m_cle > key ? _zigZigDroit(node) : _zigZagDroit(node);
-        else
-            node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite), _hauteur(node->m_gauche));
-    }
+	if (node == 0)
+	{
+		node = new Noeud(key, value);
+		node->m_hauteur++;
+		m_cardinalite++;
+		return;
+	}
+	if(node->m_cle > key )
+	{
+		_inserer(node->m_gauche, key, value);
+		if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == 2 ||
+				(_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == -2)
+		{
+			if (node->m_gauche->m_cle > key) _zigZigGauche(node);
+			else _zigZagGauche(node);
+		}
+		else
+			node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));
+	}
+	else
+	{
+		_inserer(node->m_droite, key, value);
+		if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == 2 ||
+				(_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == -2)
+		{
+			if (node->m_droite->m_cle <= key)
+				_zigZigDroit(node);
+			else
+				_zigZagDroit(node);
+		}
+		else
+			node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite),_hauteur(node->m_gauche));
+	}
 }
 
 //! \param[in] p_cle la cle du noeud que l'on veut enlever
@@ -499,7 +524,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>:
 template<typename TypeCle, typename TypeValeur>
 int ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
-	return p_noeud ? p_noeud->m_hauteur : 0;
+	return p_noeud == NULL ? 0 : p_noeud->m_hauteur;
 }
 
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent
