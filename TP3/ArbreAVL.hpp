@@ -207,7 +207,25 @@ std::vector<std::pair<TypeCle, TypeValeur> > ArbreAVL<TypeCle, TypeValeur>::list
 {
 	std::vector<std::pair<TypeCle, TypeValeur> > vec;
 	_visiteSymetrique(m_racine, vec);
-	return (vec);
+	return vec;
+}
+
+template<typename TypeCle, typename TypeValeur>
+void ArbreAVL<TypeCle, TypeValeur>::show() const {
+    _show(m_racine, 0);
+}
+
+template<typename TypeCle, typename TypeValeur>
+void ArbreAVL<TypeCle, TypeValeur>::_show(Noeud const * node, int h) const {
+    if (node) {
+        for (int i = 0; i < h; ++i)
+            std::cout << ". ";
+        std::cout << "[" << node->m_cle << "]=" << node->m_valeur << "; //h:" << node->m_hauteur << std::endl;
+        if (node->m_gauche)
+            _show(node->m_gauche, h + 1);
+        if (node->m_droite)
+            _show(node->m_droite, h + 1);
+    }
 }
 
 //! \brief Lister un arbre pre-ordre
@@ -481,7 +499,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>:
 template<typename TypeCle, typename TypeValeur>
 int ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
-	return p_noeud->m_hauteur;
+	return p_noeud ? p_noeud->m_hauteur : 0;
 }
 
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent

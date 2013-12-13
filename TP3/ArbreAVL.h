@@ -45,8 +45,11 @@ public :
   void				valider() const;
   void				inserer(const TypeCle &p_cle, const TypeValeur &p_valeur);
   void				enlever(const TypeCle &p_cle);
+  void              show() const;
 
 private :
+
+    void _show(Noeud const * node, int h) const;
 
   int				_maximum(int p_premier, int p_second) const;
   Noeud				*_max(Noeud *p_racine);
