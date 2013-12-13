@@ -13,8 +13,11 @@
 //! \post un noeud typique est initialise
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL< TypeCle, TypeValeur >::Noeud::Noeud(const TypeCle &p_cle, const TypeValeur &p_valeur)
-  : m_cle(p_cle), m_valeur(p_valeur), m_gauche(NULL), m_droite(NULL), m_hauteur(0)
+  : m_cle(p_cle), m_valeur(p_valeur)
 {
+  m_gauche = NULL;
+  m_droite = NULL;
+  m_hauteur = 0;
 }
 
 
@@ -35,9 +38,9 @@ ArbreAVL< TypeCle, TypeValeur >::Noeud::~Noeud()
 //! \post une instance de la classe ArbreAVL est initialisee
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur>::ArbreAVL()
-  : m_cardinalite(0), m_racine(NULL)
+  : m_cardinalite(0)
 {
-
+  m_racine = NULL;
 }
 
 //! \brief Constructeur par copie (appelle _copier)
@@ -48,8 +51,8 @@ ArbreAVL<TypeCle, TypeValeur>::ArbreAVL()
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur>::ArbreAVL(const ArbreAVL<TypeCle, TypeValeur> &p_source)
 {
-  m_cardinalite = p_source.m_cardinalite;
-  m_racine = _copier(p_source.m_racine);
+  std::cout << "COPIE" << std::endl;
+  *this = p_source;
 }
 
 //! \brief Destructeur
@@ -73,11 +76,12 @@ ArbreAVL<TypeCle, TypeValeur>::~ArbreAVL()
 template<typename TypeCle, typename TypeValeur>
 ArbreAVL<TypeCle, TypeValeur> &ArbreAVL<TypeCle, TypeValeur>::operator=(const ArbreAVL<TypeCle, TypeValeur> &p_arbre)
 {
+  std::cout << "OPERTEUR =" << std::endl;
   if (m_racine != NULL)
     _detruire(m_racine);
   m_racine = _copier(p_arbre.m_racine);
   m_cardinalite = p_arbre.m_cardinalite;
-  return this;
+  return *this;
 }
 
 //! \brief Surcharge de l'operateur ==
@@ -174,7 +178,7 @@ template<typename TypeCle, typename TypeValeur>
 std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::successeur(const TypeCle &p_cle)
 {
 	if (m_racine == NULL)
-		throw std::logic_error("successeur : l'arbre est vide!");
+	  throw std::logic_error("successeur : l'arbre est vide!");
 	Noeud *node = _successeur(m_racine, p_cle);
 	return (std::make_pair(node->m_cle, node->m_valeur));
 }
@@ -266,7 +270,11 @@ void ArbreAVL<TypeCle, TypeValeur>::inserer(const TypeCle &p_cle, const TypeVale
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::enlever(const TypeCle &p_cle)
 {
-  _enlever(p_cle, m_racine);
+  if (estVide() == true)
+    throw std::logic_error("Enlever: l'arbre est vide");
+  if (_auxAppartient(m_racine, p_cle) == NULL)
+    throw std::logic_error("Enlever: l'element n'est pas dans l'arbre");
+  _enlever(m_racine, p_cle);
 }
 
 
@@ -343,7 +351,8 @@ void ArbreAVL<TypeCle, TypeValeur>::_detruire(ArbreAVL<TypeCle, TypeValeur>::Noe
     return ;
   _detruire(p_racine->m_gauche);
   _detruire(p_racine->m_droite);
-  delete p_racine;
+  if (p_racine != NULL)
+    delete p_racine;
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -361,7 +370,7 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
   if (estVide())
     return NULL;
   if(p_racine == NULL)
-	  return NULL;
+    return NULL;
   if (p_racine->m_cle == p_cle)
     return p_racine;
   if (p_racine->m_cle > p_cle)
@@ -375,7 +384,7 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine) const
 {
-	return _auxAppartient(m_racine, p_cle)->m_valeur;
+  return _auxAppartient(m_racine, p_cle)->m_valeur;
 }
 
 
@@ -383,69 +392,72 @@ TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL
 //! \param[in] p_cle la cle de l'element a inserer
 //! \param[in] p_valeur la valeur de l'element a inserer
 template<typename TypeCle, typename TypeValeur>
-void ArbreAVL<TypeCle, TypeValeur>::_inserer(
-    ArbreAVL<TypeCle, TypeValeur>::Noeud * & node,
-    const TypeCle    & key,
-    const TypeValeur & value
-) {
-	if (node == 0)
-	{
-		node = new Noeud(key, value);
-		node->m_hauteur++;
-		m_cardinalite++;
-		return;
-	}
-	if(node->m_cle > key )
-	{
-		_inserer(node->m_gauche, key, value);
-		if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) >= 2 ||
-				(_hauteur(node->m_gauche) - _hauteur(node->m_droite)) <= -2)
-		{
-			if (node->m_gauche->m_cle > key) _zigZigGauche(node);
-			else _zigZagGauche(node);
-		}
-		else
-			node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));
-	}
-	else
-	{
-		_inserer(node->m_droite, key, value);
-		if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) >= 2 ||
+void ArbreAVL<TypeCle, TypeValeur>::_inserer(ArbreAVL<TypeCle, TypeValeur>::Noeud * & node,
+					     const TypeCle    & key,
+					     const TypeValeur & value)
+{
+  if (node == 0)
+    {
+      node = new Noeud(key, value);
+      m_cardinalite++;
+      return;
+    }
+  if (node->m_cle > key)
+    {
+      _inserer(node->m_gauche, key, value);
+      if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) >= 2 ||
+	  (_hauteur(node->m_gauche) - _hauteur(node->m_droite)) <= -2)
+      {
+    	  if (node->m_gauche->m_cle > key)
+    		  _zigZigGauche(node);
+    	  else
+    		  _zigZagGauche(node);
+      }
+      else
+    	  node->m_hauteur = 1 + _maximum(_hauteur(node->m_gauche),_hauteur(node->m_droite));
+    }
+  else
+    {
+	  _inserer(node->m_droite, key, value);
+	  if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) >= 2 ||
 				(_hauteur(node->m_droite) - _hauteur(node->m_gauche)) <= -2)
-		{
-			if (node->m_droite->m_cle <= key)
-				_zigZigDroit(node);
-			else
-				_zigZagDroit(node);
-		}
-		else
-			node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite),_hauteur(node->m_gauche));
-	}
+	  {
+		  if (node->m_droite->m_cle <= key)
+			  _zigZigDroit(node);
+		  else
+			  _zigZagDroit(node);
+	  }
+	  else
+		  node->m_hauteur = 1 + _maximum(_hauteur(node->m_droite),_hauteur(node->m_gauche));
+    }
 }
 
 //! \param[in] p_cle la cle du noeud que l'on veut enlever
 //! \param[in] p_racine la racine de l'arbre ou enlever l'element
 template<typename TypeCle, typename TypeValeur>
-void ArbreAVL<TypeCle, TypeValeur>::_enlever(
-    const TypeCle & p_cle,
-    ArbreAVL<TypeCle, TypeValeur>::Noeud * & p_racine
-) {
-    if (p_racine->m_cle > p_cle)
-        _enlever(p_cle, p_racine->m_gauche);
-    else if (p_racine->m_cle < p_cle)
-        _enlever(p_cle, p_racine->m_droite);
-    else if (p_racine->m_gauche != NULL && p_racine->m_droite != NULL) {
-        Noeud * tmp = p_racine->m_droite;
-        while (tmp->m_gauche != NULL)
-            tmp = tmp->m_gauche;
-        p_racine->m_cle = tmp->m_cle;
-        _auxRetireMin(p_racine->m_droite);
-    } else {
-        Noeud * vieuxNoeud = p_racine;
-        p_racine = p_racine->m_gauche ? p_racine->m_gauche : p_racine->m_droite;
-        delete vieuxNoeud;
+void ArbreAVL<TypeCle, TypeValeur>::_enlever(const TypeCle & p_cle,
+					     ArbreAVL<TypeCle, TypeValeur>::Noeud * & p_racine)
+{
+  if (p_racine->m_cle > p_cle)
+    _enlever(p_cle, p_racine->m_gauche);
+  else if (p_racine->m_cle < p_cle)
+    _enlever(p_cle, p_racine->m_droite);
+  else if (p_racine->m_gauche != NULL && p_racine->m_droite != NULL)
+    {
+      Noeud * tmp = p_racine->m_droite;
+      while (tmp->m_gauche != NULL)
+	tmp = tmp->m_gauche;
+      p_racine->m_cle = tmp->m_cle;
+      _auxRetireMin(p_racine->m_droite);
     }
-    _balancer(p_racine);
+  else
+    {
+      Noeud * vieuxNoeud = p_racine;
+      p_racine = p_racine->m_gauche ? p_racine->m_gauche : p_racine->m_droite;
+      delete vieuxNoeud;
+      --m_cardinalite;
+    }
+  _balancer(p_racine);
 }
 
 template<typename TypeCle, typename TypeValeur>
@@ -460,14 +472,36 @@ void ArbreAVL<TypeCle, TypeValeur>::_auxRetireMin(ArbreAVL<TypeCle, TypeValeur>:
       Noeud * tmp = p_noeud;
       p_noeud = p_noeud->m_droite;
       delete tmp;
+      --m_cardinalite;
     }
 }
 
 //! \param[in] p_racine la noeud dont on veut faire un rebalancement si necessaire
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_balancer(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_racine)
-{
+{ 
+  if (estVide() == true)
+    throw std::logic_error("Balancer: l'arbre est vide");
 
+  if ((_hauteur(p_racine->m_gauche) - _hauteur(p_racine->m_droite)) == 2 ||
+      (_hauteur(p_racine->m_gauche) - _hauteur(p_racine->m_droite)) == -2)
+    {
+      if (p_racine->m_gauche->m_cle > p_racine->m_droite->m_cle)
+	_zigZigGauche(p_racine);
+      else
+	_zigZagGauche(p_racine);
+    }
+  else
+    {
+      if ((_hauteur(p_racine->m_droite) - _hauteur(p_racine->m_gauche)) == 2 ||
+	  (_hauteur(p_racine->m_droite) - _hauteur(p_racine->m_gauche)) == -2)
+	{
+	  if (p_racine->m_droite->m_cle <= p_racine->m_gauche->m_cle)
+	    _zigZigDroit(p_racine);
+	  else
+	    _zigZagDroit(p_racine);
+	}
+    }
 }
 
 //! \brief Cas de balancement zig zag droit
@@ -475,8 +509,8 @@ void ArbreAVL<TypeCle, TypeValeur>::_balancer(ArbreAVL<TypeCle, TypeValeur>::Noe
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-	_zigZigGauche(p_noeudCritique->m_droite);
-	_zigZigDroit(p_noeudCritique);
+  _zigZigGauche(p_noeudCritique->m_droite);
+  _zigZigDroit(p_noeudCritique);
 }
 
 //! \brief Cas de balancement zig zag gauche
@@ -484,8 +518,8 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZagDroit(ArbreAVL<TypeCle, TypeValeur>::
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-	_zigZigDroit(p_noeudCritique->m_gauche);
-	_zigZigGauche(p_noeudCritique);
+  _zigZigDroit(p_noeudCritique->m_gauche);
+  _zigZigGauche(p_noeudCritique);
 }
 
 //! \brief Cas de balancement zig zig droit
@@ -493,13 +527,13 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZagGauche(ArbreAVL<TypeCle, TypeValeur>:
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_zigZigDroit(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-	Noeud * tmp;
-	tmp = p_noeudCritique->m_droite;
-	p_noeudCritique->m_droite = tmp->m_gauche;
-	tmp->m_gauche = p_noeudCritique;
-	p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_droite), _hauteur(p_noeudCritique->m_gauche));
-	tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_droite), p_noeudCritique->m_hauteur);
-	p_noeudCritique = tmp;
+  Noeud * tmp;
+  tmp = p_noeudCritique->m_droite;
+  p_noeudCritique->m_droite = tmp->m_gauche;
+  tmp->m_gauche = p_noeudCritique;
+  p_noeudCritique->m_hauteur = 1 + _maximum(_hauteur(p_noeudCritique->m_droite), _hauteur(p_noeudCritique->m_gauche));
+  tmp->m_hauteur = 1 + _maximum(_hauteur(tmp->m_droite), p_noeudCritique->m_hauteur);
+  p_noeudCritique = tmp;
 }
 
 //! \brief Cas de balancement zig zig gauche
@@ -507,7 +541,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZigDroit(ArbreAVL<TypeCle, TypeValeur>::
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeudCritique)
 {
-	Noeud * tmp;
+  Noeud * tmp;
   tmp = p_noeudCritique->m_gauche;
   p_noeudCritique->m_gauche = tmp->m_droite;
   tmp->m_droite = p_noeudCritique;
@@ -521,7 +555,7 @@ void ArbreAVL<TypeCle, TypeValeur>::_zigZigGauche(ArbreAVL<TypeCle, TypeValeur>:
 template<typename TypeCle, typename TypeValeur>
 int ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud *&p_noeud) const
 {
-	return p_noeud == NULL ? 0 : p_noeud->m_hauteur;
+  return p_noeud == NULL ? 0 : p_noeud->m_hauteur;
 }
 
 //! \param[in] p_cle la cle dont on desire obtenir des informations sur son parent
@@ -530,19 +564,19 @@ int ArbreAVL<TypeCle, TypeValeur>::_hauteur(ArbreAVL<TypeCle, TypeValeur>::Noeud
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_parent(const TypeCle &p_cle, ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine)
 {
-	Noeud * sArb = _auxAppartient(m_racine, p_cle);
-	if (sArb == p_racine)
-		throw std::logic_error("parent: Le parent de la racine d'existe pas!\n");
-	if ( sArb->m_cle < p_racine->m_cle )
-	{
-		if (p_racine->m_gauche == sArb) return p_racine;
-		else return _parent(p_racine->m_gauche, sArb);
-	}
-	else
-	{
-		if (p_racine->m_droite == sArb) return p_racine;
-		else return _parent(p_racine->m_droite, sArb);
-	}
+  Noeud * sArb = _auxAppartient(m_racine, p_cle);
+  if (sArb == p_racine)
+    throw std::logic_error("parent: Le parent de la racine d'existe pas!\n");
+  if ( sArb->m_cle < p_racine->m_cle )
+    {
+      if (p_racine->m_gauche == sArb) return p_racine;
+      else return _parent(p_racine->m_gauche, sArb);
+    }
+  else
+    {
+      if (p_racine->m_droite == sArb) return p_racine;
+      else return _parent(p_racine->m_droite, sArb);
+    }
 }
 
 //! \param[in] p_racine racine de l'arbre ou on cherche
@@ -570,19 +604,19 @@ typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_
 template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud * ArbreAVL<TypeCle, TypeValeur>::_successeur(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, const TypeCle &p_cle)
 {
-	Noeud* sArb;
-	if ((sArb = _auxAppartient(m_racine, p_cle)) == NULL)
-		throw std::logic_error("successeur : Cette cle n'existe pas dans l'arbre");
-	if ( sArb == _max(p_racine))
-		throw std::logic_error("successeur: l'element est le max dans l'arbre!\n");
-	if (sArb->m_droite != 0)
-		return _min(sArb->m_droite);
-	else
-	{
-		Noeud * pere = _parent(p_racine, sArb);
-		while (pere->m_cle < sArb->m_cle ) pere = _parent(p_racine, pere);
-		return pere;
-	}
+  Noeud* sArb;
+  if ((sArb = _auxAppartient(m_racine, p_cle)) == NULL)
+    throw std::logic_error("successeur : Cette cle n'existe pas dans l'arbre");
+  if ( sArb == _max(p_racine))
+    throw std::logic_error("successeur: l'element est le max dans l'arbre!\n");
+  if (sArb->m_droite != 0)
+    return _min(sArb->m_droite);
+  else
+    {
+      Noeud * pere = _parent(p_racine, sArb);
+      while (pere->m_cle < sArb->m_cle ) pere = _parent(p_racine, pere);
+      return pere;
+    }
 }
 
 //! \brief Parcours de l'arbre de facon symetrique
@@ -592,14 +626,14 @@ template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
 
-	if (p_racine == NULL)
-		return;
-	if (p_racine->m_gauche)
-		_visiteSymetrique(p_racine->m_gauche, p_vecteur);
-	p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
-	if (p_racine->m_droite)
-		_visiteSymetrique(p_racine->m_droite, p_vecteur);
-	return;
+  if (p_racine == NULL)
+    return;
+  if (p_racine->m_gauche)
+    _visiteSymetrique(p_racine->m_gauche, p_vecteur);
+  p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
+  if (p_racine->m_droite)
+    _visiteSymetrique(p_racine->m_droite, p_vecteur);
+  return;
 }
 
 //! \param[in] p_racine la racine de l'arbre dont on veut la hauteur
@@ -607,9 +641,9 @@ void ArbreAVL<TypeCle, TypeValeur>::_visiteSymetrique(ArbreAVL<TypeCle, TypeVale
 template<typename TypeCle, typename TypeValeur>
 int ArbreAVL<TypeCle, TypeValeur>::_hauteurParcours(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine) const
 {
-	if (estVide())
-		return -1;
-	return 1 + _maximum(_hauteur(p_racine->m_gauche), _hauteur(p_racine->m_droite));
+  if (estVide())
+    return -1;
+  return 1 + _maximum(_hauteur(p_racine->m_gauche), _hauteur(p_racine->m_droite));
 }
 
 //! \param[in] p_racine la racine de l'arbre parcouru
@@ -617,12 +651,12 @@ int ArbreAVL<TypeCle, TypeValeur>::_hauteurParcours(ArbreAVL<TypeCle, TypeValeur
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::_auxPreOrdre(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine, std::vector<std::pair<TypeCle, TypeValeur> > &p_vecteur) const
 {
-	if (p_racine == NULL)
-	      return;
-	p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
-	if (p_racine->m_gauche)
-		_auxPreOrdre(p_racine->m_gauche, p_vecteur);
-	if (p_racine->m_droite)
-		_auxPreOrdre(p_racine->m_droite, p_vecteur);
-	return;
+  if (p_racine == NULL)
+    return;
+  p_vecteur.push_back(std::make_pair(p_racine->m_cle, p_racine->m_valeur));
+  if (p_racine->m_gauche)
+    _auxPreOrdre(p_racine->m_gauche, p_vecteur);
+  if (p_racine->m_droite)
+    _auxPreOrdre(p_racine->m_droite, p_vecteur);
+  return;
 }

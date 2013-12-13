@@ -40,6 +40,6 @@ TEST(AnnuaireTest, ajouterEnfant)
 
   EXPECT_EQ(test->getTailleArbreGenealogique(), 0);
   test->inscrire(p, a);
-  test->ajouterEnfant(p, p2);
+  test->ajouterEnfant(p, p);
   EXPECT_EQ(test->getTailleArbreGenealogique(), 1);
 }

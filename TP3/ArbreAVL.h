@@ -49,7 +49,7 @@ public :
 
 private :
 
-    void _show(Noeud const * node, int h) const;
+  void _show(Noeud const * node, int h) const;
 
   int				_maximum(int p_premier, int p_second) const;
   Noeud				*_max(Noeud *p_racine);

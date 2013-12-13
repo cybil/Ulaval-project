@@ -21,7 +21,7 @@ TEST_F(ArbreGeneTest, constructor)
 
 TEST_F(ArbreGeneTest, AppartientFalse)
 {
-  Personne test("tata", "dupont", 1234);
+  Personne test("madame", "dupont", 8516);
   EXPECT_FALSE(arb->appartient(test));
 }
 
@@ -35,10 +35,10 @@ TEST_F(ArbreGeneTest, enfants)
   Personne test("tata", "dupont", 1234);
   Personne test2("tatadwa", "martin", 4242);
 
-  EXPECT_TRUE(arb->enfantsDe(*p).size() == 0);
+  EXPECT_EQ(arb->enfantsDe(*p).size(), 0);
 
   arb->ajouterEnfant(*p,  test);
   arb->ajouterEnfant(*p,  test2);
 
-  EXPECT_TRUE(arb->enfantsDe(*p).size() == 2);
+  EXPECT_EQ(arb->enfantsDe(*p).size(), 2);
 }
