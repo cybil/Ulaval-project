@@ -23,23 +23,19 @@ int		main() {
 
     ArbreAVL<int, int>	abr;
 
+    abr.inserer(50, 1);
+    abr.inserer(25, 2);
+    abr.inserer(10, 3);
+    abr.show();
+    return 0;
+
   std::cout << abr.appartient(120) << std::endl;
-  abr.inserer(1, 1);
+
 
   std::cout << abr.appartient(1) << std::endl;
   std::cout << abr.appartient(120) << std::endl;
-  abr.inserer(2, 2);
-  abr.inserer(3, 3);
-  abr.inserer(4, 4);
-  abr.inserer(5, 5);
-  abr.inserer(6, 4);
-  abr.inserer(7, 5);
-  abr.inserer(8, 3);
-  abr.inserer(9, 4);
-  abr.inserer(10, 5);
-  abr.inserer(11, 3);
-  abr.inserer(12, 4);
-  abr.inserer(13, 5);
+  for (int i = 0; i < 3; i++)
+	  abr.inserer(i, i);
   std::cout << abr.appartient(2) << std::endl;
   std::cout << abr.appartient(3) << std::endl;
   std::cout << abr.appartient(4) << std::endl;
@@ -70,5 +66,12 @@ int		main() {
   }
   std::cout << std::endl;
 
+  std::cout << "========Test EGALITE==========" << std::endl;
+
+//  ArbreAVL<int, int>	abr2(abr);
+//  ArbreAVL<int, int>	abr3;
+//
+//  std::cout << (1 == 1) << std::endl;
+////  std::cout << abr == abr3 << std::endl;
   return 0;
 }

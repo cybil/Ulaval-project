@@ -378,10 +378,7 @@ TypeValeur ArbreAVL<TypeCle, TypeValeur>::_valeur(const TypeCle &p_cle, ArbreAVL
 	return _auxAppartient(m_racine, p_cle)->m_valeur;
 }
 
-static void my_dg(std::string str)
-{
-	std::cout << str << std::endl;
-}
+
 //! \param[in] p_racine la racine de l'arbre ou inserer l'element
 //! \param[in] p_cle la cle de l'element a inserer
 //! \param[in] p_valeur la valeur de l'element a inserer
@@ -394,14 +391,15 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(
 	if (node == 0)
 	{
 		node = new Noeud(key, value);
+		node->m_hauteur++;
 		m_cardinalite++;
 		return;
 	}
 	if(node->m_cle > key )
 	{
 		_inserer(node->m_gauche, key, value);
-		if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == 2 ||
-				(_hauteur(node->m_gauche) - _hauteur(node->m_droite)) == -2)
+		if ((_hauteur(node->m_gauche) - _hauteur(node->m_droite)) >= 2 ||
+				(_hauteur(node->m_gauche) - _hauteur(node->m_droite)) <= -2)
 		{
 			if (node->m_gauche->m_cle > key) _zigZigGauche(node);
 			else _zigZagGauche(node);
@@ -412,8 +410,8 @@ void ArbreAVL<TypeCle, TypeValeur>::_inserer(
 	else
 	{
 		_inserer(node->m_droite, key, value);
-		if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == 2 ||
-				(_hauteur(node->m_droite) - _hauteur(node->m_gauche)) == -2)
+		if ((_hauteur(node->m_droite) - _hauteur(node->m_gauche)) >= 2 ||
+				(_hauteur(node->m_droite) - _hauteur(node->m_gauche)) <= -2)
 		{
 			if (node->m_droite->m_cle <= key)
 				_zigZigDroit(node);
