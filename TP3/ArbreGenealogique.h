@@ -95,7 +95,7 @@ private:
   void				_ajouterEnfant(Noeud *noeud_fils, const Personne &p_enfant);
 
   void				_creerVecteurEnfant(Noeud *p_enfant,
-    					            std::vector<Personne *> p_tab_personne) const;
+    					            std::vector<Personne *> &p_tab_personne) const;
 
 
   void _display(Noeud *p_noeud, std::ostream &) const;

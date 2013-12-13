@@ -89,5 +89,27 @@ int		main() {
 
  //  std::cout << "========SHOW========" << std::endl;
  //  abr.show();
+  std::cout << "================" << std::endl;
+
+  std::cout << "========SHOW========" << std::endl;
+  abr.show();
+
+  std::cout << "========LISTER========" << std::endl;
+  std::vector<std::pair< int, int> > vec;
+  vec = abr.lister();
+
+  for (int i = 0; i < vec.size(); i++)
+  {
+	  std::cout << vec[i].first << " ";
+  }
+  std::cout << std::endl;
+  std::cout << "========LISTER PREORDRE========" << std::endl;
+  vec = abr.listerPreOrdre();
+  for (int i = 0; i < vec.size(); i++)
+  {
+	  std::cout << vec[i].first << " ";
+  }
+  std::cout << std::endl;
+
   return 0;
 }

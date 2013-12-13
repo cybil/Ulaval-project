@@ -110,7 +110,7 @@ std::vector<Personne *>		ArbreGenealogique::enfantsDe(const Personne &p_parent) 
 }
 
 void				ArbreGenealogique::_creerVecteurEnfant(Noeud *p_enfant,
-						       std::vector<Personne *> p_tab_personne) const
+						       std::vector<Personne *> &p_tab_personne) const
 {
   if (p_enfant == NULL)
     return;
@@ -127,8 +127,7 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
 {
   if (m_racine == NULL)
     throw std::logic_error("Erreur: Arbre vide dans methode appartient");
-  Noeud *tmp_personne;
-
+  Noeud *tmp_personne = NULL;
   trouvePersonne(p_personne, tmp_personne); 
   if (tmp_personne == NULL)
     return false;

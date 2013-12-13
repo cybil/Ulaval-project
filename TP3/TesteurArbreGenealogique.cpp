@@ -1,13 +1,14 @@
 #include "gtest/gtest.h"
-#include "ArbreAVL.h"
+#include "ArbreGenealogique.h"
 
 class ArbreGeneTest : public ::testing::Test
 {
+public:
   ArbreGeneTest() {
     p = new Personne("toto", "dupont", 1234);
     arb = new ArbreGenealogique(*p);
   }
-public:
+
   ArbreGenealogique* arb;
   Personne* p;
 
@@ -20,13 +21,13 @@ TEST_F(ArbreGeneTest, constructor)
 
 TEST_F(ArbreGeneTest, AppartientFalse)
 {
-  Personne test("tata", "dupont", 1234);
-  EXPECT_FALSE(arb.appartient(test));
+  Personne test("madame", "dupont", 8516);
+  EXPECT_FALSE(arb->appartient(test));
 }
 
 TEST_F(ArbreGeneTest, AppartientTrue)
 {
-  EXPECT_TRUE(arb.appartient(p));
+  EXPECT_TRUE(arb->appartient(*p));
 }
 
 TEST_F(ArbreGeneTest, enfants)
@@ -34,10 +35,10 @@ TEST_F(ArbreGeneTest, enfants)
   Personne test("tata", "dupont", 1234);
   Personne test2("tatadwa", "martin", 4242);
 
-  EXPECT_TRUE(arb.enfantsDe(*p).size() == 0);
+  EXPECT_EQ(arb->enfantsDe(*p).size(), 0);
 
-  arb.ajouterEnfant(*p,  test);
-  arb.ajouterEnfant(*p,  test2);
+  arb->ajouterEnfant(*p,  test);
+  arb->ajouterEnfant(*p,  test2);
 
-  EXPECT_TRUE(arb.enfantsDe(*p).size() == 2);
+  EXPECT_EQ(arb->enfantsDe(*p).size(), 2);
 }
