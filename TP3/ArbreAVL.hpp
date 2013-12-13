@@ -266,7 +266,7 @@ void ArbreAVL<TypeCle, TypeValeur>::inserer(const TypeCle &p_cle, const TypeVale
 template<typename TypeCle, typename TypeValeur>
 void ArbreAVL<TypeCle, TypeValeur>::enlever(const TypeCle &p_cle)
 {
-  _enlever(m_racine, p_cle);
+  _enlever(p_cle, m_racine);
 }
 
 
