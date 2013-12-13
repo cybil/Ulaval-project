@@ -159,15 +159,11 @@ std::pair<TypeCle, TypeValeur> ArbreAVL<TypeCle, TypeValeur>::parent(const TypeC
 template<typename TypeCle, typename TypeValeur>
 std::pair<TypeCle, TypeValeur>	ArbreAVL<TypeCle, TypeValeur>::successeur(const TypeCle &p_cle)
 {
-  Noeud				*tmp;
-
-  if (m_racine == 0)
-    throw std::logic_error("Successeur: l'arbre est vide");
-  if (appartient(p_cle) == false)
-    throw std::logic_error("Successeur: la cle n'existe pas dans l'arbre");
-  tmp = _max(m_racine);
-  if (tmp->m_cle == p_cle)
-    throw std::logic_error("Successeur: cet element est le maximum de l'arbre");
+	if (m_racine == NULL)
+		throw std::logic_error("successeur : l'arbre est vide!");
+	Noeud *node;
+	node = _successeur(m_racine, p_cle);
+	return (make_paire(node->m_cle, node->m_valeur));
 }
 
 //! \brief Trouver une valeur a une cle donnee
@@ -513,7 +509,19 @@ template<typename TypeCle, typename TypeValeur>
 typename ArbreAVL<TypeCle, TypeValeur>::Noeud			*ArbreAVL<TypeCle, TypeValeur>::_successeur(ArbreAVL<TypeCle, TypeValeur>::Noeud *p_racine,
 												    const TypeCle &p_cle)
 {
-
+	Noeud* sArb;
+	if ((sArb = _auxAppartient(m_racine, p_cle)) == NULL)
+		throw std::logic_error("successeur : Cette cle n'existe pas dans l'arbre");
+	if ( sArb == _max(p_racine))
+		throw std::logic_error("successeur: l'element est le max dans l'arbre!\n");
+	if (sArb->m_droite != 0)
+		return _min(sArb->m_droite);
+	else
+	{
+		Noeud * pere = _parent(p_racine, sArb);
+		while (pere->m_cle < sArb->m_cle ) pere = _parent(p_racine, pere);
+		return pere;
+	}
 }
 
 //! \brief Parcours de l'arbre de facon symetrique
