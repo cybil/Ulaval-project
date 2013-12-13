@@ -61,6 +61,8 @@ private :
   void				_inserer(Noeud *&p_racine, const TypeCle &p_cle,
 					 const TypeValeur &p_valeur);
   void				_enlever(const TypeCle &p_cle, Noeud *&p_racine);
+  void				_auxRetireMin(Noeud *&p_noeud);
+
   void				_balancer(Noeud *&p_racine);
   void				_zigZagDroit(Noeud *&p_noeudCritique);
   void				_zigZagGauche(Noeud *&p_noeudCritique);

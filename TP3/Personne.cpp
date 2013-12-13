@@ -42,16 +42,16 @@ std::string Personne::reqPrenom(void) const { return m_prenom; }
 //! \param[in] p_personne une instance de la classe Personne
 //! \return    un booleen : true si this < p_personne
 bool Personne::operator<(Personne const & p_personne) const {
-	int c = strcmp(m_nom, p_personne.m_nom);
-	return c ? c < 0 : strcmp(m_prenom, p_personne.m_prenom);
+  int c = strcmp(m_nom.c_str(), p_personne.m_nom.c_str());
+  return c ? c < 0 : strcmp(m_prenom.c_str(), p_personne.m_prenom.c_str());
 }
 
 //! \brief     Surcharge de l'operateur superieur
 //! \param[in] p_personne une instance de la classe Personne
 //! \return    un booleen : true si this > p_personne
 bool Personne::operator>(Personne const & p_personne) const {
-	int c = strcmp(m_nom, p_personne.m_nom);
-	return c ? c > 0 : strcmp(m_prenom, p_personne.m_prenom);
+  int c = strcmp(m_nom.c_str(), p_personne.m_nom.c_str());
+  return c ? c > 0 : strcmp(m_prenom.c_str(), p_personne.m_prenom.c_str());
 }
 
 //! \brief     Surcharge de l'operateur inferieur ou egal

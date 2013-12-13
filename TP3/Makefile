@@ -1,4 +1,7 @@
 
+# CXXFLAGS += -Wall -Wextra
+CXXFLAGS += -g3
+
 CXX =		g++
 
 NAME =		tp3
