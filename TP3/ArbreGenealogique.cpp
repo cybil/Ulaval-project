@@ -135,6 +135,20 @@ bool				ArbreGenealogique::appartient(const Personne &p_personne) const
   return true;
 }
 
+//! \brief Parcourt l'arbre en post-ordre
+//! \param[in] p_Ncourant l'arbre parcouru
+//! \param[in] p_vPersonnes un vector contenant le resultat du parcours
+//! \post p_vPersonnes est rempli
+void				_postOrdre(Noeud *p_Ncourant,
+					   std::vector<Personne *> &p_vPersonnes) const
+{
+  if (p_Ncourant == NULL)
+    return ;
+  _postOrdre(p_Ncourant->m_gauche);
+  _postOrdre(p_Ncourant->m_droite);
+  p_vPersonnes.push_back(p_Ncourant->m_personne);
+}
+
 //! \brief Surcharge de l'operateur <<
 //! \param[in] p_arbreG l'arbre genealogique a sortir
 //! \param[out] p_os le flux de sortie contenant l'arbre formatee
@@ -159,16 +173,16 @@ void		ArbreGenealogique::_display(Noeud *p_noeud, std::ostream &os) const
   
   os << *(p_noeud->m_personne);
   
-  if (p_noeud->m_droite)
-    {
-     os << ", ";
-      _display(p_noeud->m_droite, os);
-    }
   if (p_noeud->m_gauche)
     {
       os << std::endl;
       os << "Parent : " << *(p_noeud->m_personne) << " --> ";
       _display(p_noeud->m_gauche, os);
+    }
+  if (p_noeud->m_droite)
+    {
+     os << ", ";
+      _display(p_noeud->m_droite, os);
     }
 
   return;
